@@ -2,6 +2,20 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AuthPayload {
+  """JWT access token"""
+  accessToken: String!
+
+  """User avatar"""
+  avatar: String
+
+  """User ID"""
+  id: String!
+
+  """User email"""
+  name: String!
+}
+
 type Comment {
   """User who authored the comment"""
   author: User!
@@ -89,7 +103,7 @@ type Mutation {
   removePost(id: Int!): Post!
   removeTag(id: Int!): Tag!
   removeUser(id: String!): User!
-  signIn(signInInput: SignInInput!): String!
+  signIn(signInInput: SignInInput!): AuthPayload!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   updateLike(updateLikeInput: UpdateLikeInput!): Like!
   updatePost(updatePostInput: UpdatePostInput!): Post!
