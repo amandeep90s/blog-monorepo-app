@@ -1,8 +1,8 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { LikeService } from './like.service';
-import { Like } from './entities/like.entity';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateLikeInput } from './dto/create-like.input';
 import { UpdateLikeInput } from './dto/update-like.input';
+import { Like } from './entities/like.entity';
+import { LikeService } from './like.service';
 
 @Resolver(() => Like)
 export class LikeResolver {
@@ -19,7 +19,7 @@ export class LikeResolver {
   }
 
   @Query(() => Like, { name: 'like' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id') id: string) {
     return this.likeService.findOne(id);
   }
 
@@ -29,7 +29,7 @@ export class LikeResolver {
   }
 
   @Mutation(() => Like)
-  removeLike(@Args('id', { type: () => Int }) id: number) {
+  removeLike(@Args('id') id: string) {
     return this.likeService.remove(id);
   }
 }

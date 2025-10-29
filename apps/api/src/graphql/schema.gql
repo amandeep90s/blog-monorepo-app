@@ -38,22 +38,22 @@ type Comment {
 
 input CreateCommentInput {
   """Example field (placeholder)"""
-  exampleField: Int!
+  exampleField: String!
 }
 
 input CreateLikeInput {
   """Example field (placeholder)"""
-  exampleField: Int!
+  exampleField: String!
 }
 
 input CreatePostInput {
   """Example field (placeholder)"""
-  exampleField: Int!
+  exampleField: String!
 }
 
 input CreateTagInput {
   """Example field (placeholder)"""
-  exampleField: Int!
+  exampleField: String!
 }
 
 input CreateUserInput {
@@ -98,10 +98,10 @@ type Mutation {
   createPost(createPostInput: CreatePostInput!): Post!
   createTag(createTagInput: CreateTagInput!): Tag!
   createUser(createUserInput: CreateUserInput!): User!
-  removeComment(id: Int!): Comment!
-  removeLike(id: Int!): Like!
-  removePost(id: Int!): Post!
-  removeTag(id: Int!): Tag!
+  removeComment(id: String!): Comment!
+  removeLike(id: String!): Like!
+  removePost(id: String!): Post!
+  removeTag(id: String!): Tag!
   removeUser(id: String!): User!
   signIn(signInInput: SignInInput!): AuthPayload!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
@@ -147,11 +147,11 @@ type Post {
 }
 
 type Query {
-  comment(id: Int!): Comment!
-  like(id: Int!): Like!
-  post(id: Int!): Post!
+  comment(id: String!): Comment!
+  like(id: String!): Like!
+  post(id: String!): Post!
   posts: [Post!]!
-  tag(id: Int!): Tag!
+  tag(id: String!): Tag!
   user(id: String!): User!
   userByEmail(email: String!): User!
   users: [User!]!
@@ -178,26 +178,26 @@ type Tag {
 
 input UpdateCommentInput {
   """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  exampleField: String
+  id: String!
 }
 
 input UpdateLikeInput {
   """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  exampleField: String
+  id: String!
 }
 
 input UpdatePostInput {
   """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  exampleField: String
+  id: String!
 }
 
 input UpdateTagInput {
   """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  exampleField: String
+  id: String!
 }
 
 input UpdateUserInput {

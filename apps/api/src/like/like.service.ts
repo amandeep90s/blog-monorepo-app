@@ -15,15 +15,15 @@ export class LikeService {
     return `This action returns all like`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} like`;
   }
 
-  update(id: number, updateLikeInput: UpdateLikeInput) {
+  update(id: string, updateLikeInput: UpdateLikeInput) {
     return `This action updates a #${id} like`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} like`;
   }
 }

@@ -15,15 +15,15 @@ export class CommentService {
     return `This action returns all comment`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} comment`;
   }
 
-  update(id: number, updateCommentInput: UpdateCommentInput) {
+  update(id: string, updateCommentInput: UpdateCommentInput) {
     return `This action updates a #${id} comment`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} comment`;
   }
 }
