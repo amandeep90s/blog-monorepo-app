@@ -89,6 +89,7 @@ type Mutation {
   removePost(id: Int!): Post!
   removeTag(id: Int!): Tag!
   removeUser(id: String!): User!
+  signIn(signInInput: SignInInput!): String!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   updateLike(updateLikeInput: UpdateLikeInput!): Like!
   updatePost(updatePostInput: UpdatePostInput!): Post!
@@ -140,6 +141,14 @@ type Query {
   user(id: String!): User!
   userByEmail(email: String!): User!
   users: [User!]!
+}
+
+input SignInInput {
+  """Email of the user"""
+  email: String!
+
+  """Password of the user"""
+  password: String!
 }
 
 type Tag {
