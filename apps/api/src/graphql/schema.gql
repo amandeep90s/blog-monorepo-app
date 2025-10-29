@@ -2,9 +2,61 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Comment {
+  """User who authored the comment"""
+  author: User!
+
+  """Content of the comment"""
+  content: String!
+
+  """Timestamp when the comment was created"""
+  createdAt: DateTime!
+
+  """Comment ID"""
+  id: String!
+
+  """Post the comment belongs to"""
+  post: Post!
+
+  """Timestamp when the comment was last updated"""
+  updatedAt: DateTime!
+}
+
+input CreateCommentInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateLikeInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 input CreatePostInput {
   """Example field (placeholder)"""
   exampleField: Int!
+}
+
+input CreateTagInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateUserInput {
+  """The avatar of the user"""
+  avatar: String
+
+  """The bio of the user"""
+  bio: String
+
+  """The email of the user"""
+  email: String!
+
+  """The  name of the user"""
+  name: String!
+
+  """The password of the user"""
+  password: String!
 }
 
 """
@@ -12,13 +64,45 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Like {
+  """Timestamp when the like was created"""
+  createdAt: DateTime!
+
+  """Like ID"""
+  id: String!
+
+  """Post that was liked"""
+  post: Post!
+
+  """User who liked the post"""
+  user: User!
+}
+
 type Mutation {
+  createComment(createCommentInput: CreateCommentInput!): Comment!
+  createLike(createLikeInput: CreateLikeInput!): Like!
   createPost(createPostInput: CreatePostInput!): Post!
+  createTag(createTagInput: CreateTagInput!): Tag!
+  createUser(createUserInput: CreateUserInput!): User!
+  removeComment(id: Int!): Comment!
+  removeLike(id: Int!): Like!
   removePost(id: Int!): Post!
+  removeTag(id: Int!): Tag!
+  removeUser(id: String!): User!
+  updateComment(updateCommentInput: UpdateCommentInput!): Comment!
+  updateLike(updateLikeInput: UpdateLikeInput!): Like!
   updatePost(updatePostInput: UpdatePostInput!): Post!
+  updateTag(updateTagInput: UpdateTagInput!): Tag!
+  updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
 type Post {
+  """Author of the post"""
+  author: User!
+
+  """Comments made on the post"""
+  comments: [Comment!]!
+
   """Post Content"""
   content: String!
 
@@ -34,6 +118,9 @@ type Post {
   """Post Slug"""
   slug: String!
 
+  """Tags associated with the post"""
+  tags: [Tag!]!
+
   """Post Thumbnail"""
   thumbnail: String
 
@@ -45,12 +132,94 @@ type Post {
 }
 
 type Query {
+  comment(id: Int!): Comment!
+  like(id: Int!): Like!
   post(id: Int!): Post!
   posts: [Post!]!
+  tag(id: Int!): Tag!
+  user(id: String!): User!
+  userByEmail(email: String!): User!
+  users: [User!]!
+}
+
+type Tag {
+  """Tag ID"""
+  id: String!
+
+  """Name of the tag"""
+  name: String!
+
+  """Posts associated with the tag"""
+  posts: [Post!]!
+}
+
+input UpdateCommentInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateLikeInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
 
 input UpdatePostInput {
   """Example field (placeholder)"""
   exampleField: Int
   id: Int!
+}
+
+input UpdateTagInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateUserInput {
+  """The avatar of the user"""
+  avatar: String
+
+  """The bio of the user"""
+  bio: String
+
+  """The email of the user"""
+  email: String
+  id: String!
+
+  """The  name of the user"""
+  name: String
+
+  """The password of the user"""
+  password: String
+}
+
+type User {
+  """User avatar URL"""
+  avatar: String
+
+  """User bio"""
+  bio: String
+
+  """Comments made by the user"""
+  comments: [Comment!]!
+
+  """Account creation date"""
+  createdAt: DateTime!
+
+  """User email"""
+  email: String!
+
+  """User ID"""
+  id: String!
+
+  """User Name"""
+  name: String!
+
+  """Posts authored by the user"""
+  posts: [Post!]!
+
+  """Account last update date"""
+  updatedAt: DateTime!
 }

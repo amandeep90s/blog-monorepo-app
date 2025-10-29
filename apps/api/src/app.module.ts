@@ -4,12 +4,13 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { CommentModule } from './comment/comment.module';
+import { LikeModule } from './like/like.module';
 import { PostModule } from './post/post.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { UserModule } from './user/user.module';
-import { CommentModule } from './comment/comment.module';
 import { TagModule } from './tag/tag.module';
-import { LikeModule } from './like/like.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { LikeModule } from './like/like.module';
     CommentModule,
     TagModule,
     LikeModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
