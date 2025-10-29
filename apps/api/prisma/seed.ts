@@ -20,7 +20,7 @@ async function main() {
   const userData = Array.from({ length: 10 }).map(() => {
     return {
       name: faker.person.fullName(),
-      email: faker.internet.email(),
+      email: faker.internet.email().toLowerCase(),
       bio: faker.lorem.sentence(),
       avatar: faker.image.avatar(),
       password: defaultPassword,
@@ -43,7 +43,7 @@ async function main() {
   const userIds: string[] = users.map((user) => user.id);
 
   // Create posts with random user assignment
-  const posts = Array.from({ length: 30 }).map(() => {
+  const posts = Array.from({ length: 50 }).map(() => {
     // Randomly select a user ID
     const randomUserIndex = Math.floor(Math.random() * userIds.length);
     const randomUserId = userIds[randomUserIndex];
@@ -55,7 +55,7 @@ async function main() {
       content: faker.lorem.paragraphs(3),
       thumbnail: faker.image.urlPicsumPhotos({ width: 240, height: 320 }),
       authorId: randomUserId,
-      published: faker.datatype.boolean(),
+      published: true,
     };
   });
 
@@ -70,7 +70,7 @@ async function main() {
           ...post,
           comments: {
             createMany: {
-              data: Array.from({ length: 20 }).map(() => ({
+              data: Array.from({ length: 15 }).map(() => ({
                 content: faker.lorem.sentence(),
                 authorId: randomUserId,
               })),
