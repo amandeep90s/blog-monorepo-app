@@ -1,4 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Comment } from 'src/comment/entities/comment.entity';
+import { Tag } from 'src/tag/entities/tag.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @ObjectType()
 export class Post {
@@ -25,4 +28,13 @@ export class Post {
 
   @Field(() => Date, { description: 'Post Last Update Date' })
   updatedAt: Date;
+
+  @Field(() => [Comment], { description: 'Comments made on the post' })
+  comments: Comment[];
+
+  @Field(() => User, { description: 'Author of the post' })
+  author: User;
+
+  @Field(() => [Tag], { description: 'Tags associated with the post' })
+  tags: Tag[];
 }
