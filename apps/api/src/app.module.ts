@@ -1,5 +1,6 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { AppController } from './app.controller';
@@ -20,6 +21,7 @@ import { UserModule } from './user/user.module';
       graphiql: true, // Enable GraphiQL interface
       sortSchema: true, // Sort the schema for better readability
     }),
+    ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     PostModule,
     UserModule,
