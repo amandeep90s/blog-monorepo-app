@@ -150,7 +150,8 @@ type Query {
   comment(id: String!): Comment!
   like(id: String!): Like!
   post(id: String!): Post!
-  posts: [Post!]!
+  posts(skip: Float, take: Float): [Post!]!
+  postsCount: Int!
   tag(id: String!): Tag!
   user(id: String!): User!
   userByEmail(email: String!): User!
