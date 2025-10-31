@@ -6,6 +6,8 @@ import { ThemeProvider } from "@/components/app/theme-provider";
 
 import "./globals.css";
 
+import Providers from "@/app/providers";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -43,9 +45,11 @@ export default function RootLayout({
           />
         </div>
 
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
-        </ThemeProvider>
+        <Providers>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            {children}
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );
