@@ -91,29 +91,29 @@ export default function HeroSection() {
               <div className="text-center sm:mx-auto sm:w-10/12 lg:mt-0 lg:mr-auto lg:w-4/5">
                 <Link href="/" className="mx-auto flex w-fit items-center gap-2 rounded-(--radius) border p-1 pr-3">
                   <span className="bg-muted rounded-[calc(var(--radius)-0.25rem)] px-2 py-1 text-xs">New</span>
-                  <span className="text-sm">Introduction Tailark Html</span>
+                  <span className="text-sm">Community Launch 2025</span>
                   <span className="block h-4 w-px bg-(--color-border)"></span>
 
                   <ArrowRight className="size-4" />
                 </Link>
 
                 <h1 className="mt-8 text-4xl font-semibold md:text-5xl xl:text-5xl xl:[line-height:1.125]">
-                  Tame the Wild West <br /> of Frontend Development
+                  Where Developers <br /> Share Their Stories
                 </h1>
                 <p className="mx-auto mt-8 hidden max-w-2xl text-lg text-wrap sm:block">
-                  Tailwindcss highly customizable components for building modern websites and applications that look and
-                  feel the way you mean it.
+                  DevScribe is a thriving community platform where developers connect, share insights, and inspire each
+                  other through their experiences and thoughts. Join the conversation today.
                 </p>
                 <p className="mx-auto mt-6 max-w-2xl text-wrap sm:hidden">
-                  Highly customizable components for building modern websites and applications, with your personal
-                  spark.
+                  Connect with developers worldwide. Share your insights, learn from others, and grow together in our
+                  vibrant community.
                 </p>
 
                 <div className="mt-8">
                   <Button size="lg" asChild>
-                    <Link href="#">
+                    <Link href="/sign-up">
                       <Rocket className="relative size-4" />
-                      <span className="text-nowrap">Start Building</span>
+                      <span className="text-nowrap">Join the Community</span>
                     </Link>
                   </Button>
                 </div>

@@ -18,7 +18,7 @@ export default function SignUpForm() {
           <Link href="/" aria-label="go home" className="mx-auto block w-fit">
             <LogoIcon />
           </Link>
-          <h1 className="mt-4 mb-1 text-xl font-semibold">Create a Tailark Account</h1>
+          <h1 className="mt-4 mb-1 text-xl font-semibold">Create a DevScribe Account</h1>
           <p className="text-sm">Welcome! Create an account to get started</p>
         </div>
 
@@ -59,7 +59,7 @@ export default function SignUpForm() {
             <Input type="password" required name="pwd" id="pwd" className="input sz-md variant-mixed" />
           </div>
 
-          <Button className="w-full">Sign In</Button>
+          <Button className="w-full">Sign Up</Button>
         </div>
 
         <div className="my-6 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
