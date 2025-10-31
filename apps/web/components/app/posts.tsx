@@ -4,9 +4,11 @@ import PostCard from "./post-card";
 
 type PostsProps = {
   posts: Post[];
+  currentPage: number;
+  totalPages: number;
 };
 
-export default function Posts({ posts }: PostsProps) {
+export default function Posts({ posts, currentPage, totalPages }: PostsProps) {
   return (
     <section>
       <div className="pb-32">
