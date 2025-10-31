@@ -1,6 +1,4 @@
-import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import type { GraphQLContext } from 'src/common/types/graphql-context.type';
 import { CreatePostInput } from './dto/create-post.input';
 import { UpdatePostInput } from './dto/update-post.input';
@@ -16,7 +14,7 @@ export class PostResolver {
     return this.postService.create(createPostInput);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Query(() => [Post], { name: 'posts' })
   findAll(@Context() context: GraphQLContext) {
     const user = context.req.user;

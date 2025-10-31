@@ -12,42 +12,16 @@ export default function Posts({ posts }: PostsProps) {
       <div className="pb-32">
         <div className="mx-auto max-w-5xl px-6">
           <div className="text-center">
-            <h2 className="text-3xl font-semibold text-balance md:text-4xl">Integrate with your favorite tools</h2>
+            <h2 className="text-3xl font-semibold text-balance md:text-4xl">Latest Posts from Our Community</h2>
             <p className="text-muted-foreground mt-6">
-              Connect seamlessly with popular platforms and services to enhance your workflow.
+              Discover insights, tutorials, and stories shared by developers from around the world.
             </p>
           </div>
 
           <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <PostCard
-              title="Google Gemini"
-              description="Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente."
-            />
-
-            <PostCard
-              title="Replit"
-              description="Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente."
-            />
-
-            <PostCard
-              title="Magic UI"
-              description="Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente."
-            />
-
-            <PostCard
-              title="VSCodium"
-              description="Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente."
-            />
-
-            <PostCard
-              title="MediaWiki"
-              description="Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente."
-            />
-
-            <PostCard
-              title="Google PaLM"
-              description="Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente."
-            />
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
           </div>
         </div>
       </div>
