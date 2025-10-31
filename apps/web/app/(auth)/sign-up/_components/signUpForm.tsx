@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { APP_NAME } from "@/constants/app";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,7 +19,7 @@ export default function SignUpForm() {
           <Link href="/" aria-label="go home" className="mx-auto block w-fit">
             <LogoIcon />
           </Link>
-          <h1 className="mt-4 mb-1 text-xl font-semibold">Create a DevScribe Account</h1>
+          <h1 className="mt-4 mb-1 text-xl font-semibold">Create a {APP_NAME} Account</h1>
           <p className="text-sm">Welcome! Create an account to get started</p>
         </div>
 

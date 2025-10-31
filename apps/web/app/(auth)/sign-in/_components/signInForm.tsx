@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { APP_NAME } from "@/constants/app";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,7 +19,7 @@ export default function SignInForm() {
           <Link href="/" aria-label="go home" className="mx-auto block w-fit">
             <LogoIcon />
           </Link>
-          <h1 className="mt-4 mb-1 text-xl font-semibold">Sign In to DevScribe</h1>
+          <h1 className="mt-4 mb-1 text-xl font-semibold">Sign In to {APP_NAME}</h1>
           <p className="text-sm">Welcome back! Sign in to continue</p>
         </div>
 

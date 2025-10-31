@@ -9,6 +9,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import Link from "next/link";
+import { APP_NAME } from "@/constants/app";
 import { ArrowRight, Menu, Rocket, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -37,7 +38,7 @@ export default function HeroSection() {
               <div className="flex w-full justify-between lg:w-auto">
                 <Link href="/" aria-label="home" className="flex items-center space-x-2">
                   <LogoIcon />
-                  <span className="text-foreground text-xl font-medium dark:text-white">DevScribe</span>
+                  <span className="text-foreground text-xl font-medium dark:text-white">{APP_NAME}</span>
                 </Link>
 
                 <button
@@ -101,7 +102,7 @@ export default function HeroSection() {
                   Where Developers <br /> Share Their Stories
                 </h1>
                 <p className="mx-auto mt-8 hidden max-w-2xl text-lg text-wrap sm:block">
-                  DevScribe is a thriving community platform where developers connect, share insights, and inspire each
+                  {APP_NAME} is a thriving community platform where developers connect, share insights, and inspire each
                   other through their experiences and thoughts. Join the conversation today.
                 </p>
                 <p className="mx-auto mt-6 max-w-2xl text-wrap sm:hidden">
