@@ -148,6 +148,7 @@ type Post {
 
 type Query {
   comment(id: String!): Comment!
+  getPostBySlug(slug: String!): Post!
   like(id: String!): Like!
   post(id: String!): Post!
   posts(skip: Float, take: Float): [Post!]!

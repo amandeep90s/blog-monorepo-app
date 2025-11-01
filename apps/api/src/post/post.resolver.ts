@@ -21,6 +21,11 @@ export class PostResolver {
     return this.postService.findAll({ skip, take });
   }
 
+  @Query(() => Post, { name: 'getPostBySlug' })
+  findBySlug(@Args('slug', { type: () => String }) slug: string) {
+    return this.postService.findBySlug(slug);
+  }
+
   @Query(() => Int, { name: 'postsCount' })
   count() {
     return this.postService.count();

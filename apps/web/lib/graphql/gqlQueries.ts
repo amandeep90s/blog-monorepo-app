@@ -13,3 +13,24 @@ export const GET_POSTS = gql`
     postsCount
   }
 `;
+
+export const GET_POST_BY_SLUG = gql`
+  query getPostBySlug($slug: String!) {
+    getPostBySlug(slug: $slug) {
+      id
+      title
+      slug
+      thumbnail
+      content
+      createdAt
+      published
+      author {
+        name
+      }
+      tags {
+        id
+        name
+      }
+    }
+  }
+`;

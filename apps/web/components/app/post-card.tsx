@@ -43,7 +43,7 @@ export default function PostCard({ post }: PostCardProps) {
 
         <div className="flex gap-3 border-t border-dashed pt-6">
           <Button asChild variant="secondary" size="sm" className="gap-1 pr-2 shadow-none">
-            <Link href={`/blog/${post.slug}/${post.id}`}>
+            <Link href={`/blog/${post.slug}`}>
               Read More
               <ChevronRight className="ml-0 !size-3.5 opacity-50" />
             </Link>

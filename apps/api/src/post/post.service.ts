@@ -22,6 +22,16 @@ export class PostService {
     return await this.prisma.post.findMany({ skip, take });
   }
 
+  async findBySlug(slug: string) {
+    return await this.prisma.post.findUnique({
+      where: { slug },
+      include: {
+        author: true,
+        tags: true,
+      },
+    });
+  }
+
   findOne(id: string) {
     return `This action returns a #${id} post`;
   }
