@@ -1,6 +1,7 @@
 import { Post } from "@/types/modelTypes";
 
 import PostCard from "./post-card";
+import PostPagination from "./post-pagination";
 
 type PostsProps = {
   posts: Post[];
@@ -25,6 +26,8 @@ export default function Posts({ posts, currentPage, totalPages }: PostsProps) {
               <PostCard key={post.id} post={post} />
             ))}
           </div>
+
+          <PostPagination currentPage={currentPage} totalPages={totalPages} />
         </div>
       </div>
     </section>
