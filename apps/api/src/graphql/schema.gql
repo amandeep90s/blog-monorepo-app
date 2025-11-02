@@ -40,18 +40,42 @@ type Comment {
 }
 
 input CreateCommentInput {
-  """Example field (placeholder)"""
-  exampleField: String!
+  """ID of the author"""
+  authorId: String!
+
+  """Content of the comment"""
+  content: String!
+
+  """ID of the post"""
+  postId: String!
 }
 
 input CreateLikeInput {
-  """Example field (placeholder)"""
-  exampleField: String!
+  """ID of the post"""
+  postId: String!
+
+  """ID of the user"""
+  userId: String!
 }
 
 input CreatePostInput {
-  """Example field (placeholder)"""
-  exampleField: String!
+  """ID of the author"""
+  authorId: String!
+
+  """Content of the post"""
+  content: String!
+
+  """Publication status"""
+  published: Boolean = false
+
+  """Unique slug for the post"""
+  slug: String!
+
+  """Thumbnail image URL"""
+  thumbnail: String
+
+  """Title of the post"""
+  title: String!
 }
 
 input CreateTagInput {
@@ -182,21 +206,44 @@ type Tag {
 }
 
 input UpdateCommentInput {
-  """Example field (placeholder)"""
-  exampleField: String
+  """ID of the author"""
+  authorId: String
+  content: String
   id: String!
+
+  """ID of the post"""
+  postId: String
 }
 
 input UpdateLikeInput {
-  """Example field (placeholder)"""
-  exampleField: String
   id: String!
+
+  """ID of the post"""
+  postId: String
+
+  """ID of the user"""
+  userId: String
 }
 
 input UpdatePostInput {
-  """Example field (placeholder)"""
-  exampleField: String
+  """ID of the author"""
+  authorId: String
+
+  """Content of the post"""
+  content: String
   id: String!
+
+  """Publication status"""
+  published: Boolean = false
+
+  """Unique slug for the post"""
+  slug: String
+
+  """Thumbnail image URL"""
+  thumbnail: String
+
+  """Title of the post"""
+  title: String
 }
 
 input UpdateTagInput {

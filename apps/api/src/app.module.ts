@@ -2,6 +2,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -22,6 +23,13 @@ import { UserModule } from './user/user.module';
       sortSchema: true, // Sort the schema for better readability
     }),
     ConfigModule.forRoot({ isGlobal: true }),
+    // Rate limiting: 10 requests per minute per IP
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // Time window in milliseconds (1 minute)
+        limit: 100, // Maximum number of requests within the time window
+      },
+    ]),
     PrismaModule,
     PostModule,
     UserModule,

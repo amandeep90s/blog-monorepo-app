@@ -32,7 +32,7 @@ async function main() {
   });
 
   // Fetch only user IDs from the created users
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
   const users: { id: string }[] = await prisma.user.findMany({
     select: { id: true },
   });
@@ -42,11 +42,12 @@ async function main() {
   // Get user IDs for random assignment
   const userIds: string[] = users.map((user) => user.id);
 
-  // Create posts with random user assignment
-  const posts = Array.from({ length: 50 }).map(() => {
-    // Randomly select a user ID
-    const randomUserIndex = Math.floor(Math.random() * userIds.length);
-    const randomUserId = userIds[randomUserIndex];
+  // Helper function to get random user ID
+  const getRandomUserId = () =>
+    userIds[Math.floor(Math.random() * userIds.length)];
+
+  // Create posts in batch for better performance
+  const postsData = Array.from({ length: 50 }).map(() => {
     const fakerTitle = faker.lorem.sentence();
 
     return {
@@ -54,45 +55,51 @@ async function main() {
       slug: generateSlug(fakerTitle),
       content: faker.lorem.paragraphs(3),
       thumbnail: faker.image.urlPicsumPhotos({ width: 240, height: 320 }),
-      authorId: randomUserId,
+      authorId: getRandomUserId(),
       published: true,
     };
   });
 
-  await Promise.all(
-    posts.map(async (post) => {
-      // Randomly select a user ID
-      const randomUserIndex = Math.floor(Math.random() * userIds.length);
-      const randomUserId = userIds[randomUserIndex];
+  // Create posts using createMany for better performance
+  await prisma.post.createMany({
+    data: postsData,
+  });
 
-      await prisma.post.create({
-        data: {
-          ...post,
-          comments: {
-            createMany: {
-              data: Array.from({ length: 15 }).map(() => ({
-                content: faker.lorem.sentence(),
-                authorId: randomUserId,
-              })),
-            },
-          },
-        },
-      });
-    }),
+  console.log(`Created ${postsData.length} posts`);
+
+  // Fetch created posts to add comments
+  const createdPosts = await prisma.post.findMany({
+    select: { id: true },
+    orderBy: { createdAt: 'desc' },
+    take: 50,
+  });
+
+  // Create comments in batch
+  const commentsData = createdPosts.flatMap((post) =>
+    Array.from({ length: 15 }).map(() => ({
+      content: faker.lorem.sentence(),
+      postId: post.id,
+      authorId: getRandomUserId(),
+    })),
   );
 
-  console.log(`Created ${posts.length} posts`);
-  console.log('Seeding completed.');
+  // Batch insert all comments at once
+  await prisma.comment.createMany({
+    data: commentsData,
+  });
+
+  console.log(`Created ${commentsData.length} comments`);
+  console.log('Seeding completed successfully!');
 }
 
 // Run the main function
 main()
   .then(() => {
-    prisma.$disconnect();
+    void prisma.$disconnect();
     process.exit(0);
   })
   .catch((e) => {
     console.error(e);
-    prisma.$disconnect();
+    void prisma.$disconnect();
     process.exit(1);
   });
