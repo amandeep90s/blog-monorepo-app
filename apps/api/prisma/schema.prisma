@@ -20,7 +20,7 @@ model User {
   name      String    @db.VarChar(100)
   bio       String?
   avatar    String?
-  password  String
+  password  String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   posts     Post[]

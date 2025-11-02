@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { verify } from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateUserInput } from 'src/user/dto/create-user.input';
 import { SignInInput } from './dto/signin.input';
 import { AuthJwtPayload } from './types/auth-jwtPaylod';
 
@@ -51,5 +52,31 @@ export class AuthService {
     const currentUser = { id: user.id };
 
     return currentUser;
+  }
+
+  async validateGoogleUser(googleUser: CreateUserInput) {
+    const isUserExist = await this.prisma.user.findUnique({
+      where: { email: googleUser.email },
+    });
+
+    if (isUserExist) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...authUser } = isUserExist;
+      return authUser;
+    }
+
+    const newUser = await this.prisma.user.create({
+      data: {
+        email: googleUser.email,
+        name: googleUser.name,
+        avatar: googleUser.avatar,
+        password: googleUser.password,
+      },
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...authUser } = newUser;
+
+    return authUser;
   }
 }

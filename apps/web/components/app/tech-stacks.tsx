@@ -40,7 +40,7 @@ export default function TechStacksSection() {
 
               <div className="mx-auto flex w-fit justify-center gap-2">
                 <IntegrationCard>
-                  <StackIcon name="postgresql" />
+                  <StackIcon name="jest" />
                 </IntegrationCard>
 
                 <IntegrationCard>
