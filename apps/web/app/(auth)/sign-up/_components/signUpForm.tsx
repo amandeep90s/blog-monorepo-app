@@ -1,17 +1,21 @@
 "use client";
 
+import { useActionState } from "react";
 import Link from "next/link";
 import { APP_NAME } from "@/constants/app";
 
+import { signUp } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LogoIcon } from "@/components/app/logo";
 
 export default function SignUpForm() {
+  const [state, action, isPending] = useActionState(signUp, undefined);
+
   return (
     <form
-      action=""
+      action={action}
       className="bg-muted m-auto h-fit w-full max-w-sm overflow-hidden rounded-[calc(var(--radius)+.125rem)] border shadow-md shadow-zinc-950/5 dark:[--color-muted:var(--color-zinc-900)]"
     >
       <div className="bg-card -m-px rounded-[calc(var(--radius)+.125rem)] border p-8 pb-6">
@@ -24,31 +28,41 @@ export default function SignUpForm() {
         </div>
 
         <div className="mt-6 space-y-6">
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-2">
-              <Label htmlFor="firstname" className="block text-sm">
-                Firstname
-              </Label>
-              <Input type="text" required name="firstname" id="firstname" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="lastname" className="block text-sm">
-                Lastname
-              </Label>
-              <Input type="text" required name="lastname" id="lastname" />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="name" className="block text-sm">
+              Full Name
+            </Label>
+            <Input
+              type="text"
+              required
+              name="name"
+              id="name"
+              defaultValue={state?.data.name}
+              autoComplete="name"
+              disabled={isPending}
+            />
+            {!!state?.errors?.name && <p className="text-xs text-red-500">{state.errors.name}</p>}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="email" className="block text-sm">
-              Username
+              Email
             </Label>
-            <Input type="email" required name="email" id="email" />
+            <Input
+              type="email"
+              required
+              name="email"
+              id="email"
+              defaultValue={state?.data.email}
+              autoComplete="username"
+              disabled={isPending}
+            />
+            {!!state?.errors?.email && <p className="text-xs text-red-500">{state.errors.email}</p>}
           </div>
 
           <div className="space-y-0.5">
             <div className="flex items-center justify-between">
-              <Label htmlFor="pwd" className="text-sm">
+              <Label htmlFor="password" className="text-sm">
                 Password
               </Label>
               <Button asChild variant="link" size="sm">
@@ -57,10 +71,30 @@ export default function SignUpForm() {
                 </Link>
               </Button>
             </div>
-            <Input type="password" required name="pwd" id="pwd" className="input sz-md variant-mixed" />
+            <Input
+              type="password"
+              required
+              name="password"
+              id="password"
+              defaultValue={state?.data.password}
+              className="input sz-md variant-mixed"
+              autoComplete="current-password"
+              disabled={isPending}
+            />
+            {!!state?.errors?.password && (
+              <div className="text-xs text-red-500">
+                <ul>
+                  {state.errors.password.map((err) => (
+                    <li key={err}>{err}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
-          <Button className="w-full">Sign Up</Button>
+          <Button className="w-full">{isPending ? "Signing Up..." : "Sign Up"}</Button>
+
+          {!!state?.message && <p className="text-center text-xs text-red-500">{state.message}</p>}
         </div>
 
         <div className="my-6 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
@@ -70,7 +104,7 @@ export default function SignUpForm() {
         </div>
 
         <div className="w-full">
-          <Button type="button" variant="outline" className="w-full">
+          <Button type="button" variant="outline" className="w-full" disabled={isPending}>
             <svg xmlns="http://www.w3.org/2000/svg" width="0.98em" height="1em" viewBox="0 0 256 262">
               <path
                 fill="#4285f4"
