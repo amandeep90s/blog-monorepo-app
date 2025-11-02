@@ -46,7 +46,7 @@ export default function SignInForm() {
 
           <div className="space-y-0.5">
             <div className="flex items-center justify-between">
-              <Label htmlFor="pwd" className="text-sm">
+              <Label htmlFor="password" className="text-sm">
                 Password
               </Label>
               <Button asChild variant="link" size="sm">

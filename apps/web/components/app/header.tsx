@@ -10,21 +10,43 @@ import "swiper/css/pagination";
 
 import Link from "next/link";
 import { APP_NAME } from "@/constants/app";
-import { Menu, X } from "lucide-react";
+import { LogOut, Menu, User, X } from "lucide-react";
 
+import { signOut } from "@/lib/actions/auth";
+import { Session } from "@/lib/session";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LogoIcon } from "@/components/app/logo";
 
 const menuItems = [
-  { name: "Features", href: "#" },
-  { name: "Solution", href: "#" },
-  { name: "Pricing", href: "#" },
-  { name: "About", href: "#" },
+  { name: "Home", href: "/" },
+  { name: "About", href: "/" },
+  { name: "Contact", href: "/" },
 ];
 
-export default function HeaderSection() {
+type HeaderSectionProps = {
+  session: Session | null;
+};
+
+export default function HeaderSection({ session }: HeaderSectionProps) {
   const [menuState, setMenuState] = React.useState(false);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error("Sign out failed:", error);
+    }
+  };
 
   return (
     <header>
@@ -68,16 +90,56 @@ export default function HeaderSection() {
 
               <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit lg:border-l lg:pl-6">
                 <ThemeToggle />
-                <Button asChild variant="outline" size="default">
-                  <Link href="/sign-in">
-                    <span>Sign In</span>
-                  </Link>
-                </Button>
-                <Button asChild size="default">
-                  <Link href="/sign-up">
-                    <span>Sign Up</span>
-                  </Link>
-                </Button>
+
+                {session ? (
+                  // User is signed in - show user menu
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src={session.user.avatar || undefined} alt={session.user.name || "User"} />
+                          <AvatarFallback>
+                            {session.user.name?.charAt(0).toUpperCase() || <User className="h-4 w-4" />}
+                          </AvatarFallback>
+                        </Avatar>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56" align="end" forceMount>
+                      <DropdownMenuLabel className="font-normal">
+                        <div className="flex flex-col space-y-1">
+                          <p className="text-sm leading-none font-medium">{session.user.name}</p>
+                          <p className="text-muted-foreground text-xs leading-none">{session.user.email}</p>
+                        </div>
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link href="/profile" className="cursor-pointer">
+                          <User className="mr-2 h-4 w-4" />
+                          <span>Profile</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600">
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Sign out</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  // User is not signed in - show sign in/up buttons
+                  <>
+                    <Button asChild variant="outline" size="default">
+                      <Link href="/sign-in">
+                        <span>Sign In</span>
+                      </Link>
+                    </Button>
+                    <Button asChild size="default">
+                      <Link href="/sign-up">
+                        <span>Sign Up</span>
+                      </Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>

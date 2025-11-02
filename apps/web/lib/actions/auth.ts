@@ -5,13 +5,12 @@ import { redirect } from "next/navigation";
 import { print } from "graphql";
 import z from "zod";
 
+import { fetchGraphQL } from "@/lib/graphql/fetchQueries";
+import { CREATE_USER_MUTATION, SIGN_IN_MUTATION } from "@/lib/graphql/gqlQueries";
+import { SignInFormSchema } from "@/lib/schemas/signInFormSchema";
 import { SignUpFormSchema } from "@/lib/schemas/signUpFormSchema";
+import { clearSession, createSession } from "@/lib/session";
 import { SignInFormState, SignUpFromState } from "@/lib/types/formState";
-
-import { fetchGraphQL } from "../graphql/fetchQueries";
-import { CREATE_USER_MUTATION, SIGN_IN_MUTATION } from "../graphql/gqlQueries";
-import { SignInFormSchema } from "../schemas/signInFormSchema";
-import { createSession } from "../session";
 
 export async function signUp(state: SignUpFromState, formData: FormData): Promise<SignUpFromState> {
   const validatedFields = SignUpFormSchema.safeParse(Object.fromEntries(formData.entries()));
@@ -68,4 +67,9 @@ export async function signIn(state: SignInFormState, formData: FormData): Promis
   revalidatePath("/");
   // On successful sign-in, redirect to home page
   redirect("/");
+}
+
+export async function signOut() {
+  await clearSession();
+  redirect("/sign-in");
 }
