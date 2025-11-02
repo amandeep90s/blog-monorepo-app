@@ -9,10 +9,13 @@ type AuthPayload {
   """User avatar"""
   avatar: String
 
+  """User email"""
+  email: String!
+
   """User ID"""
   id: String!
 
-  """User email"""
+  """User Name"""
   name: String!
 }
 

@@ -27,10 +27,10 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const { id, name, avatar } = user;
+    const { id, name, email, avatar } = user;
     const { accessToken } = await this.generateToken(id);
 
-    return { id, name, avatar, accessToken };
+    return { id, name, email, avatar, accessToken };
   }
 
   async generateToken(userId: string) {

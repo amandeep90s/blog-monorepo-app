@@ -18,8 +18,6 @@ type PostPaginationProps = {
 export default function PostPagination({ currentPage, totalPages, pageNeighbors = 2 }: PostPaginationProps) {
   const pageNumbers = calculatePageNumbers({ pageNeighbors, totalPages, currentPage });
 
-  console.log(pageNumbers);
-
   return (
     <Pagination className="mt-10">
       <PaginationContent>

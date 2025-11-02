@@ -11,6 +11,7 @@ import { SignInFormState, SignUpFromState } from "@/lib/types/formState";
 import { fetchGraphQL } from "../graphql/fetchQueries";
 import { CREATE_USER_MUTATION, SIGN_IN_MUTATION } from "../graphql/gqlQueries";
 import { SignInFormSchema } from "../schemas/signInFormSchema";
+import { createSession } from "../session";
 
 export async function signUp(state: SignUpFromState, formData: FormData): Promise<SignUpFromState> {
   const validatedFields = SignUpFormSchema.safeParse(Object.fromEntries(formData.entries()));
@@ -57,6 +58,11 @@ export async function signIn(state: SignInFormState, formData: FormData): Promis
       message: data.errors?.[0]?.message ?? "Invalid Credentials",
     };
   }
+
+  const { id, name, email, avatar, accessToken } = data.signIn;
+
+  // Set session cookie
+  await createSession({ user: { id, name, email, avatar }, accessToken });
 
   // Successfully signed in, revalidate the path to update any server components
   revalidatePath("/");
