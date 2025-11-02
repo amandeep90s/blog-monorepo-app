@@ -10,7 +10,7 @@ import "swiper/css/pagination";
 
 import Link from "next/link";
 import { APP_NAME } from "@/constants/app";
-import { LogOut, Menu, User, X } from "lucide-react";
+import { List, LogOut, Menu, NotebookPenIcon, User, X } from "lucide-react";
 
 import { signOut } from "@/lib/actions/auth";
 import { Session } from "@/lib/session";
@@ -116,6 +116,18 @@ export default function HeaderSection({ session }: HeaderSectionProps) {
                         <Link href="/profile" className="cursor-pointer">
                           <User className="mr-2 h-4 w-4" />
                           <span>Profile</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/create-post" className="cursor-pointer">
+                          <NotebookPenIcon className="mr-2 h-4 w-4" />
+                          <span>Create Post</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/posts" className="cursor-pointer">
+                          <List className="mr-2 h-4 w-4" />
+                          <span>My Posts</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
