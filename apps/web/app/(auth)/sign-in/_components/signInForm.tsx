@@ -1,17 +1,21 @@
 "use client";
 
+import { useActionState } from "react";
 import Link from "next/link";
 import { APP_NAME } from "@/constants/app";
 
+import { signIn } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LogoIcon } from "@/components/app/logo";
 
 export default function SignInForm() {
+  const [state, action, isPending] = useActionState(signIn, undefined);
+
   return (
     <form
-      action=""
+      action={action}
       className="bg-muted m-auto h-fit w-full max-w-sm overflow-hidden rounded-[calc(var(--radius)+.125rem)] border shadow-md shadow-zinc-950/5 dark:[--color-muted:var(--color-zinc-900)]"
     >
       <div className="bg-card -m-px rounded-[calc(var(--radius)+.125rem)] border p-8 pb-6">
@@ -26,9 +30,18 @@ export default function SignInForm() {
         <div className="mt-6 space-y-6">
           <div className="space-y-2">
             <Label htmlFor="email" className="block text-sm">
-              Username
+              Email
             </Label>
-            <Input type="email" required name="email" id="email" />
+            <Input
+              type="email"
+              required
+              name="email"
+              id="email"
+              defaultValue={state?.data.email}
+              autoComplete="username"
+              disabled={isPending}
+            />
+            {!!state?.errors?.email && <p className="text-xs text-red-500">{state.errors.email}</p>}
           </div>
 
           <div className="space-y-0.5">
@@ -42,10 +55,23 @@ export default function SignInForm() {
                 </Link>
               </Button>
             </div>
-            <Input type="password" required name="pwd" id="pwd" className="input sz-md variant-mixed" />
+            <Input
+              type="password"
+              required
+              name="password"
+              id="password"
+              defaultValue={state?.data.password}
+              className="input sz-md variant-mixed"
+              autoComplete="current-password"
+              disabled={isPending}
+            />
+
+            {!!state?.errors?.password && <p className="text-xs text-red-500">{state.errors.password}</p>}
           </div>
 
-          <Button className="w-full">Sign In</Button>
+          <Button className="w-full">{isPending ? "Signing In..." : "Sign In"}</Button>
+
+          {!!state?.message && <p className="text-center text-xs text-red-500">{state.message}</p>}
         </div>
 
         <div className="my-6 grid grid-cols-[1fr_auto_1fr] items-center gap-3">

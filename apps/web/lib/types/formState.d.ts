@@ -15,6 +15,21 @@ export type SignUpFromState =
     }
   | undefined;
 
+export type SignInFormState =
+  | {
+      data: {
+        email?: string;
+        password?: string;
+      };
+      errors?: {
+        email?: string[];
+        password?: string[];
+      };
+      message?: string;
+      success?: boolean;
+    }
+  | undefined;
+
 export type CommentFormState =
   | {
       data?: {

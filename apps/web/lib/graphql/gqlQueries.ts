@@ -42,3 +42,14 @@ export const CREATE_USER_MUTATION = gql`
     }
   }
 `;
+
+export const SIGN_IN_MUTATION = gql`
+  mutation signIn($input: SignInInput!) {
+    signIn(signInInput: $input) {
+      id
+      name
+      avatar
+      accessToken
+    }
+  }
+`;
