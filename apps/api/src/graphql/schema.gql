@@ -40,9 +40,6 @@ type Comment {
 }
 
 input CreateCommentInput {
-  """ID of the author"""
-  authorId: String!
-
   """Content of the comment"""
   content: String!
 
@@ -176,8 +173,10 @@ type Post {
 type Query {
   comment(id: String!): Comment!
   getPostBySlug(slug: String!): Post!
+  getPostComments(postId: String!, skip: Int = 0, take: Int = 12): [Comment!]!
   like(id: String!): Like!
   post(id: String!): Post!
+  postCommentCount(postId: String!): String!
   posts(skip: Float, take: Float): [Post!]!
   postsCount: Int!
   tag(id: String!): Tag!
@@ -206,8 +205,6 @@ type Tag {
 }
 
 input UpdateCommentInput {
-  """ID of the author"""
-  authorId: String
   content: String
   id: String!
 

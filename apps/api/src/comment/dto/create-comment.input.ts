@@ -12,9 +12,4 @@ export class CreateCommentInput {
   @IsNotEmpty()
   @IsString()
   postId: string;
-
-  @Field(() => String, { description: 'ID of the author' })
-  @IsNotEmpty()
-  @IsString()
-  authorId: string;
 }
