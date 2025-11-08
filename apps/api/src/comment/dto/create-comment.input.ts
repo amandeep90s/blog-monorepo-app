@@ -1,9 +1,10 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 @InputType()
 export class CreateCommentInput {
   @Field(() => String, { description: 'Content of the comment' })
+  @MaxLength(500)
   @IsNotEmpty()
   @IsString()
   content: string;

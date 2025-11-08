@@ -45,7 +45,7 @@ export default function PostCard({ post }: PostCardProps) {
           <Button asChild variant="secondary" size="sm" className="gap-1 pr-2 shadow-none">
             <Link href={`/blog/${post.slug}`}>
               Read More
-              <ChevronRight className="ml-0 !size-3.5 opacity-50" />
+              <ChevronRight className="ml-0 size-3.5! opacity-50" />
             </Link>
           </Button>
         </div>
