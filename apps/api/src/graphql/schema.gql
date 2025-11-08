@@ -173,7 +173,7 @@ type Post {
 type Query {
   comment(id: String!): Comment!
   getPostBySlug(slug: String!): Post!
-  getPostComments(postId: String!, skip: Int = 0, take: Int = 12): [Comment!]!
+  getPostComments(postId: String!, skip: Int = 0, take: Int = 9): [Comment!]!
   like(id: String!): Like!
   post(id: String!): Post!
   postCommentCount(postId: String!): String!

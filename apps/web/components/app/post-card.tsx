@@ -17,18 +17,18 @@ export default function PostCard({ post }: PostCardProps) {
 
   return (
     <Card className="p-6">
-      <div className="relative">
+      <div className="relative flex h-full flex-col justify-between">
         <div className="bg-muted relative h-48 w-full overflow-hidden rounded-md">
           <Image
             src={post.thumbnail ?? "/no-image.png"}
             alt={post.title}
             sizes="(max-width: 768px) 100vw, 50vw"
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-300 hover:scale-110"
           />
         </div>
 
-        <div className="space-y-2 py-6">
+        <div className="flex-1 space-y-2 py-6">
           <h3 className="text-base font-medium" title={post.title}>
             {truncateText(post.title, 40)}
           </h3>

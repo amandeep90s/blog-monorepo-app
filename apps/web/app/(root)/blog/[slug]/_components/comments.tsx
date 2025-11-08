@@ -8,6 +8,7 @@ import { getPostComments } from "@/lib/actions/comment";
 
 import { CommentCard } from "./comment-card";
 import CommentPagination from "./comment-pagination";
+import { CommentCardSkeleton } from "./commet-card-skeleton";
 
 type CommentsProps = {
   postId: string;
@@ -39,30 +40,7 @@ export const Comments = ({ postId }: CommentsProps) => {
   }
 
   if (isLoading) {
-    return (
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Comments</h3>
-        <div className="space-y-4">
-          {Array.from({ length: 3 }).map((_, index) => (
-            <div key={index} className="animate-pulse">
-              <div className="bg-card rounded-xl border p-4 shadow-sm">
-                <div className="flex gap-3">
-                  <div className="bg-muted size-8 rounded-full"></div>
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="bg-muted h-4 w-24 rounded"></div>
-                      <div className="bg-muted h-3 w-16 rounded"></div>
-                    </div>
-                    <div className="bg-muted h-4 w-full rounded"></div>
-                    <div className="bg-muted h-4 w-3/4 rounded"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    return <CommentCardSkeleton />;
   }
 
   return (
