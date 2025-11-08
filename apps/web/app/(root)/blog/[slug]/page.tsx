@@ -4,6 +4,7 @@ import { Calendar } from "lucide-react";
 import { fetchPostBySlug } from "@/lib/actions/post";
 import { getRelativeTime } from "@/lib/text-utils";
 
+import { Comments } from "./_components/comments";
 import SanitizedContent from "./_components/sanitized-content";
 
 type PostPageProps = {
@@ -49,6 +50,8 @@ export default async function PostPage({ params }: PostPageProps) {
             </blockquote>
           </div>
         </div>
+
+        <Comments postId={post.id} />
       </div>
     </section>
   );

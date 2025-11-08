@@ -62,8 +62,9 @@ export const GET_POST_COMMENTS = gql`
       content
       createdAt
       author {
+        id
         name
-        author
+        avatar
       }
     }
 
