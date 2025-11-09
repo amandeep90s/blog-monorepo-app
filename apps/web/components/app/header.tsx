@@ -113,19 +113,19 @@ export default function HeaderSection({ session }: HeaderSectionProps) {
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
-                        <Link href="/profile" className="cursor-pointer">
+                        <Link href="/user/profile" className="cursor-pointer">
                           <User className="mr-2 h-4 w-4" />
                           <span>Profile</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link href="/create-post" className="cursor-pointer">
+                        <Link href="/user/create-post" className="cursor-pointer">
                           <NotebookPenIcon className="mr-2 h-4 w-4" />
                           <span>Create Post</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link href="/posts" className="cursor-pointer">
+                        <Link href="/user/posts" className="cursor-pointer">
                           <List className="mr-2 h-4 w-4" />
                           <span>My Posts</span>
                         </Link>
