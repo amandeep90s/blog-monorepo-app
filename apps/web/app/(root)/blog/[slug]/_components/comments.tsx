@@ -20,7 +20,7 @@ type CommentsProps = {
 export const Comments = ({ postId, user }: CommentsProps) => {
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["GET_POST_COMMENTS", postId, page],
     queryFn: async () => {
       return await getPostComments({ postId, skip: (page - 1) * DEFAULT_PAGE_SIZE, take: DEFAULT_PAGE_SIZE });
@@ -50,9 +50,8 @@ export const Comments = ({ postId, user }: CommentsProps) => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Comments ({data?.count ?? 0})</h3>
-
-        {!!user && <AddComment />}
       </div>
+      {!!user && <AddComment postId={postId} user={user} refetchComments={refetch} />}
 
       {comments.length > 0 ? (
         <div className="space-y-4">
