@@ -47,14 +47,6 @@ input CreateCommentInput {
   postId: String!
 }
 
-input CreateLikeInput {
-  """ID of the post"""
-  postId: String!
-
-  """ID of the user"""
-  userId: String!
-}
-
 input CreatePostInput {
   """ID of the author"""
   authorId: String!
@@ -102,34 +94,20 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Like {
-  """Timestamp when the like was created"""
-  createdAt: DateTime!
-
-  """Like ID"""
-  id: String!
-
-  """Post that was liked"""
-  post: Post!
-
-  """User who liked the post"""
-  user: User!
-}
-
 type Mutation {
   createComment(createCommentInput: CreateCommentInput!): Comment!
-  createLike(createLikeInput: CreateLikeInput!): Like!
   createPost(createPostInput: CreatePostInput!): Post!
   createTag(createTagInput: CreateTagInput!): Tag!
   createUser(createUserInput: CreateUserInput!): User!
+  getUserLikedPost(postId: String!): Boolean!
+  likePost(postId: String!): Boolean!
   removeComment(id: String!): Comment!
-  removeLike(id: String!): Like!
   removePost(id: String!): Post!
   removeTag(id: String!): Tag!
   removeUser(id: String!): User!
   signIn(signInInput: SignInInput!): AuthPayload!
+  unlikePost(postId: String!): Boolean!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
-  updateLike(updateLikeInput: UpdateLikeInput!): Like!
   updatePost(updatePostInput: UpdatePostInput!): Post!
   updateTag(updateTagInput: UpdateTagInput!): Tag!
   updateUser(updateUserInput: UpdateUserInput!): User!
@@ -174,7 +152,7 @@ type Query {
   comment(id: String!): Comment!
   getPostBySlug(slug: String!): Post!
   getPostComments(postId: String!, skip: Int = 0, take: Int = 9): [Comment!]!
-  like(id: String!): Like!
+  getPostLikesCount(postId: String!): Int!
   post(id: String!): Post!
   postCommentCount(postId: String!): String!
   posts(skip: Float, take: Float): [Post!]!
@@ -210,16 +188,6 @@ input UpdateCommentInput {
 
   """ID of the post"""
   postId: String
-}
-
-input UpdateLikeInput {
-  id: String!
-
-  """ID of the post"""
-  postId: String
-
-  """ID of the user"""
-  userId: String
 }
 
 input UpdatePostInput {

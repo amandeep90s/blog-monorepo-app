@@ -1,6 +1,7 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CreateLikeInput } from './dto/create-like.input';
-import { UpdateLikeInput } from './dto/update-like.input';
+import { UseGuards } from '@nestjs/common';
+import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
+import { type GraphQLContext } from 'src/common/types/graphql-context.type';
 import { Like } from './entities/like.entity';
 import { LikeService } from './like.service';
 
@@ -8,28 +9,38 @@ import { LikeService } from './like.service';
 export class LikeResolver {
   constructor(private readonly likeService: LikeService) {}
 
-  @Mutation(() => Like)
-  createLike(@Args('createLikeInput') createLikeInput: CreateLikeInput) {
-    return this.likeService.create(createLikeInput);
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => Boolean)
+  async likePost(
+    @Context() context: GraphQLContext,
+    @Args('postId', { type: () => String }) postId: string,
+  ) {
+    const userId = context.req.user.id;
+    return await this.likeService.likePost({ postId, userId });
   }
 
-  @Query(() => [Like], { name: 'like' })
-  findAll() {
-    return this.likeService.findAll();
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => Boolean)
+  async unlikePost(
+    @Context() context: GraphQLContext,
+    @Args('postId', { type: () => String }) postId: string,
+  ) {
+    const userId = context.req.user.id;
+    return await this.likeService.unlikePost({ postId, userId });
   }
 
-  @Query(() => Like, { name: 'like' })
-  findOne(@Args('id') id: string) {
-    return this.likeService.findOne(id);
+  @Query(() => Int)
+  getPostLikesCount(@Args('postId', { type: () => String }) postId: string) {
+    return this.likeService.getPostLikesCount(postId);
   }
 
-  @Mutation(() => Like)
-  updateLike(@Args('updateLikeInput') updateLikeInput: UpdateLikeInput) {
-    return this.likeService.update(updateLikeInput.id, updateLikeInput);
-  }
-
-  @Mutation(() => Like)
-  removeLike(@Args('id') id: string) {
-    return this.likeService.remove(id);
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => Boolean)
+  getUserLikedPost(
+    @Context() context: GraphQLContext,
+    @Args('postId', { type: () => String }) postId: string,
+  ) {
+    const userId = context.req.user.id;
+    return this.likeService.getUserLikedPost({ postId, userId });
   }
 }
