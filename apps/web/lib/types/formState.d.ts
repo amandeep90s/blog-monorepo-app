@@ -36,7 +36,7 @@ export type CommentFormState =
         content?: string;
         postId?: string;
       };
-      error?: {
+      errors?: {
         content?: string[];
       };
       message?: string;

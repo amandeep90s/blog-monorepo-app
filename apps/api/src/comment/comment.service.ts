@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { DEFAULT_PAGE_SIZE } from 'src/constants';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { UpdateCommentInput } from './dto/update-comment.input';
@@ -7,13 +8,45 @@ import { UpdateCommentInput } from './dto/update-comment.input';
 export class CommentService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createCommentInput: CreateCommentInput) {
+  async findOneByPost({
+    postId,
+    take,
+    skip,
+  }: {
+    postId: string;
+    take?: number;
+    skip?: number;
+  }) {
+    return await this.prisma.comment.findMany({
+      where: {
+        postId,
+      },
+      include: {
+        author: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      skip: skip ?? 0,
+      take: take ?? DEFAULT_PAGE_SIZE,
+    });
+  }
+
+  async create(createCommentInput: CreateCommentInput, authorId: string) {
     try {
       return await this.prisma.comment.create({
         data: {
           content: createCommentInput.content,
-          postId: createCommentInput.postId,
-          authorId: createCommentInput.authorId,
+          post: {
+            connect: {
+              id: createCommentInput.postId,
+            },
+          },
+          author: {
+            connect: {
+              id: authorId,
+            },
+          },
         },
         include: {
           author: {
@@ -38,6 +71,14 @@ export class CommentService {
         error instanceof Error ? error.message : 'Unknown error';
       throw new Error(`Failed to create comment: ${errorMessage}`);
     }
+  }
+
+  async count(postId: string) {
+    return await this.prisma.comment.count({
+      where: {
+        postId,
+      },
+    });
   }
 
   async findAll() {
