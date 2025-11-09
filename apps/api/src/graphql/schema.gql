@@ -99,7 +99,6 @@ type Mutation {
   createPost(createPostInput: CreatePostInput!): Post!
   createTag(createTagInput: CreateTagInput!): Tag!
   createUser(createUserInput: CreateUserInput!): User!
-  getUserLikedPost(postId: String!): Boolean!
   likePost(postId: String!): Boolean!
   removeComment(id: String!): Comment!
   removePost(id: String!): Post!
@@ -153,6 +152,7 @@ type Query {
   getPostBySlug(slug: String!): Post!
   getPostComments(postId: String!, skip: Int = 0, take: Int = 9): [Comment!]!
   getPostLikesCount(postId: String!): Int!
+  getUserLikedPost(postId: String!): Boolean!
   post(id: String!): Post!
   postCommentCount(postId: String!): String!
   posts(skip: Float, take: Float): [Post!]!

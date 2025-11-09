@@ -35,7 +35,7 @@ export class LikeResolver {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => Boolean)
+  @Query(() => Boolean)
   getUserLikedPost(
     @Context() context: GraphQLContext,
     @Args('postId', { type: () => String }) postId: string,

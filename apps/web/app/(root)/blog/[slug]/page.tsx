@@ -7,6 +7,7 @@ import { getSession } from "@/lib/session";
 import { getRelativeTime } from "@/lib/text-utils";
 
 import { Comments } from "./_components/comments";
+import { Likes } from "./_components/likes";
 import SanitizedContent from "./_components/sanitized-content";
 
 type PostPageProps = {
@@ -59,6 +60,8 @@ export default async function PostPage({ params }: PostPageProps) {
             </blockquote>
           </div>
         </div>
+
+        <Likes postId={post.id} user={session?.user} />
 
         <Comments postId={post.id} user={session?.user} />
       </div>

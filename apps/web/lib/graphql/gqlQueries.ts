@@ -79,3 +79,34 @@ export const CREATE_COMMENT_MUTATION = gql`
     }
   }
 `;
+
+export const POST_LIKES_COUNT = gql`
+  query PostLikesCount($postId: String!) {
+    postLikesCount: getPostLikesCount(postId: $postId)
+  }
+`;
+
+export const USER_LIKED_POST = gql`
+  query UserLikedPost($postId: String!) {
+    userLikedPost: getUserLikedPost(postId: $postId)
+  }
+`;
+
+export const POST_LIKES = gql`
+  query PostLikeData($postId: String!) {
+    postLikesCount: getPostLikesCount(postId: $postId)
+    userLikedPost: getUserLikedPost(postId: $postId)
+  }
+`;
+
+export const LIKE_POST_MUTATION = gql`
+  mutation LikePost($postId: String!) {
+    likePost(postId: $postId)
+  }
+`;
+
+export const UNLIKE_POST_MUTATION = gql`
+  mutation UnlikePost($postId: String!) {
+    unlikePost(postId: $postId)
+  }
+`;

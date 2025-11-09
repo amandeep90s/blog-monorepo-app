@@ -50,8 +50,7 @@ export async function saveComment(state: CommentFormState, formData: FormData): 
       message: "Your comment has been added successfully!",
       ok: true,
     };
-  } catch (error) {
-    console.error("Error saving comment:", error);
+  } catch {
     return {
       data: Object.fromEntries(formData.entries()),
       message: "An unexpected error occurred. Please try again.",
