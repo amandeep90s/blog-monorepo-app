@@ -42,12 +42,18 @@ export default function PostCard({ post }: PostCardProps) {
         </div>
 
         <div className="flex gap-3 border-t border-dashed pt-6">
-          <Button asChild variant="secondary" size="sm" className="gap-1 pr-2 shadow-none">
-            <Link href={`/blog/${post.slug}`}>
-              Read More
-              <ChevronRight className="ml-0 size-3.5! opacity-50" />
-            </Link>
-          </Button>
+          {post.slug ? (
+            <Button asChild variant="secondary" size="sm" className="gap-1 pr-2 shadow-none">
+              <Link href={`/blog/${post.slug}`}>
+                Read More
+                <ChevronRight className="ml-0 size-3.5! opacity-50" />
+              </Link>
+            </Button>
+          ) : (
+            <Button variant="secondary" size="sm" className="gap-1 pr-2 shadow-none" disabled>
+              No Slug Available
+            </Button>
+          )}
         </div>
       </div>
     </Card>

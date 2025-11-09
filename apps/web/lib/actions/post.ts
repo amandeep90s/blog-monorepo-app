@@ -27,7 +27,15 @@ export const fetchPosts = async ({ page, pageSize }: { page?: number; pageSize?:
  * @returns
  */
 export const fetchPostBySlug = async (slug: string) => {
-  const data = await fetchGraphQL(print(GET_POST_BY_SLUG), { slug });
+  try {
+    const data = await fetchGraphQL(print(GET_POST_BY_SLUG), { slug });
 
-  return data.getPostBySlug as Post;
+    if (!data.getPostBySlug) {
+      throw new Error(`Post with slug "${slug}" not found`);
+    }
+
+    return data.getPostBySlug as Post;
+  } catch (error) {
+    throw new Error(`Failed to fetch post: ${error instanceof Error ? error.message : "Unknown error"}`);
+  }
 };

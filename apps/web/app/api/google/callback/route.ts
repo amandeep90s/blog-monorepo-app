@@ -28,7 +28,7 @@ export async function GET(req: NextResponse) {
     user: {
       id: userId,
       name,
-      avatar: avatar || undefined,
+      avatar: avatar && avatar !== "null" ? avatar : undefined,
     },
     accessToken,
   });

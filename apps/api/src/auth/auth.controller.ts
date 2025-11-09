@@ -20,8 +20,12 @@ export class AuthController {
   ) {
     const userData = await this.authService.login(req.user as User);
 
+    const avatarParam = userData.avatar
+      ? `&avatar=${encodeURIComponent(userData.avatar)}`
+      : '';
+
     res.redirect(
-      `http://localhost:3000/api/google/callback?userId=${userData.id}&name=${userData.name}&avatar=${userData.avatar}&accessToken=${userData.accessToken}`,
+      `http://localhost:3000/api/google/callback?userId=${userData.id}&name=${encodeURIComponent(userData.name)}${avatarParam}&accessToken=${userData.accessToken}`,
     );
   }
 

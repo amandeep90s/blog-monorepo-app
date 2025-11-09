@@ -5,16 +5,19 @@ import { DEFAULT_PAGE_SIZE } from "@/constants/app";
 import { useQuery } from "@tanstack/react-query";
 
 import { getPostComments } from "@/lib/actions/comment";
+import { SessionUser } from "@/lib/session";
 
+import { AddComment } from "./add-comment";
 import { CommentCard } from "./comment-card";
 import CommentPagination from "./comment-pagination";
 import { CommentCardSkeleton } from "./commet-card-skeleton";
 
 type CommentsProps = {
   postId: string;
+  user?: SessionUser;
 };
 
-export const Comments = ({ postId }: CommentsProps) => {
+export const Comments = ({ postId, user }: CommentsProps) => {
   const [page, setPage] = useState(1);
 
   const { data, isLoading, error } = useQuery({
@@ -47,6 +50,8 @@ export const Comments = ({ postId }: CommentsProps) => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Comments ({data?.count ?? 0})</h3>
+
+        {!!user && <AddComment />}
       </div>
 
       {comments.length > 0 ? (

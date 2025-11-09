@@ -1,7 +1,9 @@
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import { Calendar } from "lucide-react";
 
 import { fetchPostBySlug } from "@/lib/actions/post";
+import { getSession } from "@/lib/session";
 import { getRelativeTime } from "@/lib/text-utils";
 
 import { Comments } from "./_components/comments";
@@ -15,7 +17,14 @@ type PostPageProps = {
 
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
+
+  // Handle invalid slugs
+  if (!slug || slug === "null" || slug === "undefined") {
+    notFound();
+  }
+
   const post = await fetchPostBySlug(slug);
+  const session = await getSession();
 
   // Convert createdAt to ISO string for time element
   const createdAtISO = typeof post.createdAt === "string" ? post.createdAt : post.createdAt.toISOString();
@@ -51,7 +60,7 @@ export default async function PostPage({ params }: PostPageProps) {
           </div>
         </div>
 
-        <Comments postId={post.id} />
+        <Comments postId={post.id} user={session?.user} />
       </div>
     </section>
   );
