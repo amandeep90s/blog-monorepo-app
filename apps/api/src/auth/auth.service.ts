@@ -19,6 +19,8 @@ export class AuthService {
 
     if (!user) throw new UnauthorizedException('User not found');
 
+    if (!user.password) throw new UnauthorizedException('Invalid credentials');
+
     const passwordMatched = await verify(user.password, password);
 
     if (!passwordMatched)
