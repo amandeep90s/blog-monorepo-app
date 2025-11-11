@@ -56,7 +56,7 @@ export type PostFormState =
         published?: string;
         previousThumbnailUrl?: string;
       };
-      error?: {
+      errors?: {
         title?: string[];
         content?: string[];
         thumbnail?: string[];
