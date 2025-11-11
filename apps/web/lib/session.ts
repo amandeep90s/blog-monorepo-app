@@ -15,6 +15,11 @@ export type Session = {
 };
 
 const secretKey = process.env.SESSION_SECRET_KEY;
+
+if (!secretKey) {
+  throw new Error("SESSION_SECRET_KEY environment variable is not set");
+}
+
 const encodedKey = new TextEncoder().encode(secretKey);
 
 /**
