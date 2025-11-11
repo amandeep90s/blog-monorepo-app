@@ -39,6 +39,14 @@ type Comment {
   updatedAt: DateTime!
 }
 
+type Count {
+  """Total number of comments"""
+  comments: Int!
+
+  """Total number of likes"""
+  likes: Int!
+}
+
 input CreateCommentInput {
   """Content of the comment"""
   content: String!
@@ -48,9 +56,6 @@ input CreateCommentInput {
 }
 
 input CreatePostInput {
-  """ID of the author"""
-  authorId: String!
-
   """Content of the post"""
   content: String!
 
@@ -59,6 +64,9 @@ input CreatePostInput {
 
   """Unique slug for the post"""
   slug: String!
+
+  """Tags associated with the post"""
+  tags: [String!]!
 
   """Thumbnail image URL"""
   thumbnail: String
@@ -101,7 +109,7 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   likePost(postId: String!): Boolean!
   removeComment(id: String!): Comment!
-  removePost(id: String!): Post!
+  removePost(postId: String!): Boolean!
   removeTag(id: String!): Tag!
   removeUser(id: String!): User!
   signIn(signInInput: SignInInput!): AuthPayload!
@@ -113,6 +121,8 @@ type Mutation {
 }
 
 type Post {
+  _count: Count!
+
   """Author of the post"""
   author: User!
 
@@ -153,6 +163,7 @@ type Query {
   getPostComments(postId: String!, skip: Int = 0, take: Int = 9): [Comment!]!
   getPostLikesCount(postId: String!): Int!
   getUserLikedPost(postId: String!): Boolean!
+  getUserPosts(skip: Int, take: Int): [Post!]!
   post(id: String!): Post!
   postCommentCount(postId: String!): String!
   posts(skip: Float, take: Float): [Post!]!
@@ -160,6 +171,7 @@ type Query {
   tag(id: String!): Tag!
   user(id: String!): User!
   userByEmail(email: String!): User!
+  userPostCount: Int!
   users: [User!]!
 }
 
@@ -191,9 +203,6 @@ input UpdateCommentInput {
 }
 
 input UpdatePostInput {
-  """ID of the author"""
-  authorId: String
-
   """Content of the post"""
   content: String
   id: String!
@@ -203,6 +212,9 @@ input UpdatePostInput {
 
   """Unique slug for the post"""
   slug: String
+
+  """Tags associated with the post"""
+  tags: [String!]
 
   """Thumbnail image URL"""
   thumbnail: String
