@@ -34,10 +34,14 @@ export const PostList = ({ posts, currentPage, totalPages }: PostListProps) => {
         </div>
 
         {/* Posts Stats */}
-        <div className="mt-8 flex items-center gap-6 text-sm text-muted-foreground">
-          <span>{posts.length} post{posts.length !== 1 ? 's' : ''}</span>
+        <div className="text-muted-foreground mt-8 flex items-center gap-6 text-sm">
+          <span>
+            {posts.length} post{posts.length !== 1 ? "s" : ""}
+          </span>
           <span>•</span>
-          <span>Page {currentPage} of {totalPages}</span>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
         </div>
 
         {/* Posts Grid */}
@@ -48,9 +52,7 @@ export const PostList = ({ posts, currentPage, totalPages }: PostListProps) => {
         </div>
 
         {/* Pagination */}
-        {totalPages > 1 && (
-          <PostPagination currentPage={currentPage} totalPages={totalPages} />
-        )}
+        {totalPages > 1 && <PostPagination currentPage={currentPage} totalPages={totalPages} />}
       </div>
     </section>
   );

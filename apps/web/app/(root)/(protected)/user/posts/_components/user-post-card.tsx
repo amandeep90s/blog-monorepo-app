@@ -4,9 +4,9 @@ import { Calendar, ChevronRight, Heart, MessageCircle } from "lucide-react";
 
 import { Post } from "@/types/modelTypes";
 import { getRelativeTime, truncateText } from "@/lib/text-utils";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 import { PostActions } from "./post-actions";
 
@@ -22,11 +22,9 @@ export const UserPostCard = ({ post }: UserPostCardProps) => {
     <Card className="p-6">
       <div className="relative flex h-full flex-col justify-between">
         {/* Header with status badge and actions */}
-        <div className="flex items-start justify-between mb-4">
-          <Badge variant={post.published ? "default" : "secondary"}>
-            {post.published ? "Published" : "Draft"}
-          </Badge>
-          <PostActions postId={post.id} postTitle={post.title} />
+        <div className="mb-4 flex items-start justify-between">
+          <Badge variant={post.published ? "default" : "secondary"}>{post.published ? "Published" : "Draft"}</Badge>
+          <PostActions postId={post.id} />
         </div>
 
         {/* Thumbnail */}
@@ -48,16 +46,16 @@ export const UserPostCard = ({ post }: UserPostCardProps) => {
           <p className="text-muted-foreground line-clamp-2 text-sm" title={post.content}>
             {truncateText(post.content, 100)}
           </p>
-          
+
           {/* Meta info */}
           <div className="flex items-center justify-between pt-2">
             <div className="text-muted-foreground flex items-center gap-1.5 text-xs">
               <Calendar className="size-3.5" />
               <time dateTime={createdAtISO}>{getRelativeTime(post.createdAt)}</time>
             </div>
-            
+
             {/* Likes and Comments count */}
-            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+            <div className="text-muted-foreground flex items-center gap-3 text-xs">
               <div className="flex items-center gap-1">
                 <Heart className="size-3.5" />
                 <span>{post._count.likes}</span>
@@ -84,11 +82,9 @@ export const UserPostCard = ({ post }: UserPostCardProps) => {
               No Slug Available
             </Button>
           )}
-          
+
           <Button asChild variant="outline" size="sm" className="gap-1 shadow-none">
-            <Link href={`/user/posts/${post.id}/edit`}>
-              Edit
-            </Link>
+            <Link href={`/user/posts/${post.id}/edit`}>Edit</Link>
           </Button>
         </div>
       </div>
