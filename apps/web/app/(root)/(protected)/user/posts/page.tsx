@@ -20,5 +20,11 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
     return <NoPost />;
   }
 
-  return <PostList />;
+  return (
+    <PostList
+      posts={posts}
+      currentPage={page ? Number(page) : 1}
+      totalPages={Math.ceil(totalPosts / DEFAULT_PAGE_SIZE)}
+    />
+  );
 }
