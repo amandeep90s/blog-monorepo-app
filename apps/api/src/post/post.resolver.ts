@@ -40,7 +40,7 @@ export class PostResolver {
     return this.postService.count();
   }
 
-  @Query(() => Post, { name: 'post' })
+  @Query(() => Post, { name: 'getPostById' })
   findOne(@Args('id') id: string) {
     return this.postService.findOne(id);
   }

@@ -147,7 +147,27 @@ export const UPDATE_POST_MUTATION = gql`
 `;
 
 export const DELETE_POST_MUTATION = gql`
-  mutation DeletePost($postId: String!) {
-    deletePost(postId: $postId)
+  mutation removePost($postId: String!) {
+    removePost(postId: $postId)
+  }
+`;
+
+export const GET_POST_BY_ID = gql`
+  query getPostById($id: String!) {
+    getPostById(id: $id) {
+      id
+      title
+      thumbnail
+      content
+      createdAt
+      published
+      author {
+        name
+      }
+      tags {
+        id
+        name
+      }
+    }
   }
 `;

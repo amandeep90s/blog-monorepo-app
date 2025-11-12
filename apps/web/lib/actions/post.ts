@@ -9,6 +9,7 @@ import { authFetchGraphQL, fetchGraphQL } from "../graphql/fetchQueries";
 import {
   CREATE_POST_MUTATION,
   DELETE_POST_MUTATION,
+  GET_POST_BY_ID,
   GET_POST_BY_SLUG,
   GET_POSTS,
   GET_USER_POSTS,
@@ -45,6 +46,20 @@ export const fetchPostBySlug = async (slug: string) => {
     }
 
     return data.getPostBySlug as Post;
+  } catch (error) {
+    throw new Error(`Failed to fetch post: ${error instanceof Error ? error.message : "Unknown error"}`);
+  }
+};
+
+export const fetchPostById = async (id: string) => {
+  try {
+    const data = await fetchGraphQL(print(GET_POST_BY_ID), { id });
+
+    if (!data.getPostById) {
+      throw new Error(`Post with id "${id}" not found`);
+    }
+
+    return data.getPostById as Post;
   } catch (error) {
     throw new Error(`Failed to fetch post: ${error instanceof Error ? error.message : "Unknown error"}`);
   }
@@ -146,5 +161,5 @@ export const updatePost = async (state: PostFormState, formData: FormData): Prom
 export const deletePost = async (postId: string) => {
   const data = await authFetchGraphQL(print(DELETE_POST_MUTATION), { postId });
 
-  return data.deletePost;
+  return data.removePost;
 };

@@ -159,12 +159,12 @@ type Post {
 
 type Query {
   comment(id: String!): Comment!
+  getPostById(id: String!): Post!
   getPostBySlug(slug: String!): Post!
   getPostComments(postId: String!, skip: Int = 0, take: Int = 9): [Comment!]!
   getPostLikesCount(postId: String!): Int!
   getUserLikedPost(postId: String!): Boolean!
   getUserPosts(skip: Int, take: Int): [Post!]!
-  post(id: String!): Post!
   postCommentCount(postId: String!): String!
   posts(skip: Float, take: Float): [Post!]!
   postsCount: Int!
