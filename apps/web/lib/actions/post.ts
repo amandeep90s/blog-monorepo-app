@@ -18,7 +18,7 @@ import {
 import { transformTakeSkip } from "../helpers";
 import { PostFormSchema } from "../schemas/postFormSchema";
 import { PostFormState } from "../types/formState";
-import { uploadThumbnail } from "../upload";
+import { deleteImage, uploadThumbnail } from "../upload";
 
 /**
  * Fetch a paginated list of posts
@@ -189,6 +189,17 @@ export const updatePost = async (state: PostFormState, formData: FormData): Prom
   if (validatedFields.data.thumbnail && validatedFields.data.thumbnail.size > 0) {
     try {
       uploadedThumbnailUrl = await uploadThumbnail(validatedFields.data.thumbnail);
+
+      // Delete the old thumbnail if a new one was uploaded successfully
+      const previousThumbnail = formObject.previousThumbnailUrl as string;
+      if (previousThumbnail && uploadedThumbnailUrl) {
+        try {
+          await deleteImage(previousThumbnail);
+        } catch (error) {
+          console.warn("Failed to delete old thumbnail:", error);
+          // Continue with update even if old image deletion fails
+        }
+      }
     } catch (error) {
       console.error("Failed to upload thumbnail:", error);
       return {
@@ -245,7 +256,31 @@ export const updatePost = async (state: PostFormState, formData: FormData): Prom
  * @param postId
  */
 export const deletePost = async (postId: string) => {
-  const data = await authFetchGraphQL(print(DELETE_POST_MUTATION), { postId });
+  try {
+    // First, fetch the post to get the thumbnail URL
+    const postData = await authFetchGraphQL(print(GET_POST_BY_ID), { id: postId });
+    const post = postData?.getPostById;
 
-  return data.removePost;
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    // Delete the thumbnail image from Supabase if it exists
+    if (post.thumbnail) {
+      try {
+        await deleteImage(post.thumbnail);
+      } catch (error) {
+        console.warn("Failed to delete thumbnail image:", error);
+        // Continue with post deletion even if image deletion fails
+      }
+    }
+
+    // Delete the post from the database
+    const data = await authFetchGraphQL(print(DELETE_POST_MUTATION), { postId });
+
+    return data.removePost;
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    throw error;
+  }
 };
