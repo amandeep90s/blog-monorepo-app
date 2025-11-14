@@ -50,7 +50,22 @@ export const SIGN_IN_MUTATION = gql`
       name
       email
       avatar
+      bio
       accessToken
+    }
+  }
+`;
+
+export const GET_CURRENT_USER = gql`
+  query getCurrentUser {
+    getCurrentUser {
+      id
+      name
+      email
+      avatar
+      bio
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -168,6 +183,17 @@ export const GET_POST_BY_ID = gql`
         id
         name
       }
+    }
+  }
+`;
+
+export const UPDATE_PROFILE_MUTATION = gql`
+  mutation UpdateProfile($input: UpdateProfileInput!) {
+    updateProfile(updateProfileInput: $input) {
+      id
+      name
+      bio
+      updatedAt
     }
   }
 `;

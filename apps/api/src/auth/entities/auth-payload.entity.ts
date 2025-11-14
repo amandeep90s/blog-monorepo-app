@@ -14,6 +14,9 @@ export class AuthPayload {
   @Field(() => String, { description: 'User avatar', nullable: true })
   avatar?: string;
 
+  @Field(() => String, { description: 'User bio', nullable: true })
+  bio?: string;
+
   @Field(() => String, { description: 'JWT access token' })
   accessToken: string;
 }

@@ -67,3 +67,18 @@ export type PostFormState =
       ok?: boolean;
     }
   | undefined;
+
+export type ProfileFormState =
+  | {
+      data?: {
+        name?: string;
+        bio?: string;
+      };
+      errors?: {
+        name?: string[];
+        bio?: string[];
+      };
+      message?: string;
+      ok?: boolean;
+    }
+  | undefined;

@@ -9,6 +9,9 @@ type AuthPayload {
   """User avatar"""
   avatar: String
 
+  """User bio"""
+  bio: String
+
   """User email"""
   email: String!
 
@@ -116,6 +119,7 @@ type Mutation {
   unlikePost(postId: String!): Boolean!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   updatePost(updatePostInput: UpdatePostInput!): Post!
+  updateProfile(updateProfileInput: UpdateProfileInput!): User!
   updateTag(updateTagInput: UpdateTagInput!): Tag!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
@@ -159,6 +163,7 @@ type Post {
 
 type Query {
   comment(id: String!): Comment!
+  getCurrentUser: User!
   getPostById(id: String!): Post!
   getPostBySlug(slug: String!): Post!
   getPostComments(postId: String!, skip: Int = 0, take: Int = 9): [Comment!]!
@@ -221,6 +226,14 @@ input UpdatePostInput {
 
   """Title of the post"""
   title: String
+}
+
+input UpdateProfileInput {
+  """The bio of the user"""
+  bio: String
+
+  """The name of the user"""
+  name: String
 }
 
 input UpdateTagInput {

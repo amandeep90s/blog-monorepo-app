@@ -7,6 +7,7 @@ export type SessionUser = {
   name?: string;
   email?: string;
   avatar?: string | null;
+  bio?: string | null;
 };
 
 export type Session = {
