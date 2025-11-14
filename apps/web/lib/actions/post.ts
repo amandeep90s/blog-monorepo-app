@@ -150,35 +150,68 @@ export const saveNewPost = async (state: PostFormState, formData: FormData): Pro
  * @param formData
  */
 export const updatePost = async (state: PostFormState, formData: FormData): Promise<PostFormState> => {
-  const validatedFields = PostFormSchema.safeParse(Object.fromEntries(formData.entries()));
+  const formObject = Object.fromEntries(formData.entries());
+  const validatedFields = PostFormSchema.safeParse(formObject);
 
   if (!validatedFields.success) {
     const flattened = z.flattenError(validatedFields.error);
 
     return {
-      data: Object.fromEntries(formData.entries()),
+      data: formObject,
       errors: flattened.fieldErrors,
     };
   }
 
+  // Generate slug from title if title changed
+  const slug = validatedFields.data.title
+    .toLowerCase()
+    .replace(/[^a-z0-9 -]/g, "") // Remove special characters
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/-+/g, "-") // Replace multiple hyphens with single hyphen
+    .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+
   const thumbnailUrl = "";
-  // Todo:Upload Thumbnail to supabase
+  // TODO: Upload thumbnail to supabase
 
-  const data = await authFetchGraphQL(print(UPDATE_POST_MUTATION), {
-    input: {
-      ...validatedFields.data,
-      ...(thumbnailUrl ? { thumbnail: thumbnailUrl } : {}),
-    },
-  });
+  // Use existing thumbnail if no new one uploaded
+  const finalThumbnailUrl = thumbnailUrl || (formObject.previousThumbnailUrl as string) || "";
 
-  let response;
-  if (data) {
-    response = { message: "Post updated successfully", ok: true };
-  } else {
-    response = { message: "Failed to update post", ok: false };
+  // Ensure tags is always an array - the schema already transforms it to an array
+  const tagsArray = validatedFields.data.tags || [];
+
+  const updatePostInput = {
+    id: validatedFields.data.id!,
+    title: validatedFields.data.title,
+    content: validatedFields.data.content,
+    slug,
+    tags: tagsArray,
+    published: validatedFields.data.published,
+    ...(finalThumbnailUrl ? { thumbnail: finalThumbnailUrl } : {}),
+  };
+
+  try {
+    const data = await authFetchGraphQL(print(UPDATE_POST_MUTATION), {
+      input: updatePostInput,
+    });
+
+    if (data?.updatePost?.id) {
+      return { message: "Post updated successfully!", ok: true };
+    } else {
+      return { message: "Failed to update post", ok: false };
+    }
+  } catch (error) {
+    console.error("Error updating post:", error);
+
+    // Don't treat Next.js redirect as an error
+    if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+      return { message: "Post updated successfully!", ok: true };
+    }
+
+    return {
+      message: `Failed to update post: ${error instanceof Error ? error.message : "Unknown error"}`,
+      ok: false,
+    };
   }
-
-  return response;
 };
 
 /**

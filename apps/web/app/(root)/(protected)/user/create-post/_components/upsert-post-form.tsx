@@ -30,6 +30,7 @@ const UpsertPostForm = ({ state, formAction, post, isPending }: Props) => {
   const [imageUrl, setImageUrl] = useState("");
 
   const isEditing = !!post;
+  const existingThumbnail = post?.thumbnail;
 
   useEffect(() => {
     if (state?.message) {
@@ -61,6 +62,9 @@ const UpsertPostForm = ({ state, formAction, post, isPending }: Props) => {
 
         <form action={formAction} className="space-y-8">
           {isEditing && <input type="hidden" name="id" value={post.id} />}
+          {isEditing && existingThumbnail && (
+            <input type="hidden" name="previousThumbnailUrl" value={existingThumbnail} />
+          )}
           <input type="hidden" name="published" value={published ? "on" : "off"} />
 
           {/* Post Content Section */}
@@ -177,10 +181,10 @@ const UpsertPostForm = ({ state, formAction, post, isPending }: Props) => {
                       {state.errors.thumbnail[0]}
                     </p>
                   )}
-                  {(imageUrl || state?.data?.previousThumbnailUrl) && (
+                  {(imageUrl || existingThumbnail || state?.data?.previousThumbnailUrl) && (
                     <div className="overflow-hidden rounded-lg border">
                       <Image
-                        src={imageUrl || state?.data?.previousThumbnailUrl || ""}
+                        src={imageUrl || existingThumbnail || state?.data?.previousThumbnailUrl || ""}
                         alt="Post thumbnail preview"
                         width={400}
                         height={200}

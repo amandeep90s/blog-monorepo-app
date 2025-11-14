@@ -36,7 +36,7 @@ export default async function PostPage({ params }: PostPageProps) {
         <div className="w-full overflow-hidden rounded-lg">
           <Image
             className="h-100 w-full object-cover transition-all duration-500 hover:scale-105"
-            src={!!post.thumbnail ? post.thumbnail : "/no-media.png"}
+            src={post.thumbnail || "/no-image.png"}
             alt={post.title}
             height="300"
             width="300"
