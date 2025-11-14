@@ -18,6 +18,7 @@ import {
 import { transformTakeSkip } from "../helpers";
 import { PostFormSchema } from "../schemas/postFormSchema";
 import { PostFormState } from "../types/formState";
+import { uploadThumbnail } from "../upload";
 
 /**
  * Fetch a paginated list of posts
@@ -108,15 +109,28 @@ export const saveNewPost = async (state: PostFormState, formData: FormData): Pro
     .replace(/-+/g, "-") // Replace multiple hyphens with single hyphen
     .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
 
-  const thumbnailUrl = "";
-  // TODO: Upload thumbnail to supabase
+  // Upload thumbnail to Supabase if provided
+  let uploadedThumbnailUrl = "";
+  if (validatedFields.data.thumbnail && validatedFields.data.thumbnail.size > 0) {
+    try {
+      uploadedThumbnailUrl = await uploadThumbnail(validatedFields.data.thumbnail);
+    } catch (error) {
+      console.error("Failed to upload thumbnail:", error);
+      return {
+        data: formObject,
+        message: "Failed to upload thumbnail image",
+        ok: false,
+      };
+    }
+  }
 
-  // Remove id field for new post creation and prepare the input
-  const { id, ...postData } = validatedFields.data;
+  // Remove id and thumbnail fields for new post creation and prepare the input
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id, thumbnail, ...postData } = validatedFields.data;
   const createPostInput = {
     ...postData,
     slug,
-    thumbnail: thumbnailUrl,
+    thumbnail: uploadedThumbnailUrl,
   };
 
   try {
@@ -170,11 +184,23 @@ export const updatePost = async (state: PostFormState, formData: FormData): Prom
     .replace(/-+/g, "-") // Replace multiple hyphens with single hyphen
     .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
 
-  const thumbnailUrl = "";
-  // TODO: Upload thumbnail to supabase
+  // Upload new thumbnail to Supabase if provided
+  let uploadedThumbnailUrl = "";
+  if (validatedFields.data.thumbnail && validatedFields.data.thumbnail.size > 0) {
+    try {
+      uploadedThumbnailUrl = await uploadThumbnail(validatedFields.data.thumbnail);
+    } catch (error) {
+      console.error("Failed to upload thumbnail:", error);
+      return {
+        data: formObject,
+        message: "Failed to upload thumbnail image",
+        ok: false,
+      };
+    }
+  }
 
-  // Use existing thumbnail if no new one uploaded
-  const finalThumbnailUrl = thumbnailUrl || (formObject.previousThumbnailUrl as string) || "";
+  // Use uploaded thumbnail, existing thumbnail, or empty string
+  const finalThumbnailUrl = uploadedThumbnailUrl || (formObject.previousThumbnailUrl as string) || "";
 
   // Ensure tags is always an array - the schema already transforms it to an array
   const tagsArray = validatedFields.data.tags || [];
