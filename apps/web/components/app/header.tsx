@@ -14,7 +14,6 @@ import { List, LogOut, Menu, NotebookPenIcon, User, X } from "lucide-react";
 
 import { signOut } from "@/lib/actions/auth";
 import { Session } from "@/lib/session";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { UserAvatar } from "@/components/ui/user-avatar";
 import { LogoIcon } from "@/components/app/logo";
 
 const menuItems = [
@@ -96,12 +96,12 @@ export default function HeaderSection({ session }: HeaderSectionProps) {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                        <Avatar className="h-10 w-10">
-                          <AvatarImage src={session.user.avatar || undefined} alt={session.user.name || "User"} />
-                          <AvatarFallback>
-                            {session.user.name?.charAt(0).toUpperCase() || <User className="h-4 w-4" />}
-                          </AvatarFallback>
-                        </Avatar>
+                        <UserAvatar
+                          className="h-10 w-10"
+                          src={session.user.avatar}
+                          alt={session.user.name || "User"}
+                          showIcon={true}
+                        />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56" align="end" forceMount>
@@ -113,19 +113,19 @@ export default function HeaderSection({ session }: HeaderSectionProps) {
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
-                        <Link href="/profile" className="cursor-pointer">
+                        <Link href="/user/profile" className="cursor-pointer">
                           <User className="mr-2 h-4 w-4" />
                           <span>Profile</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link href="/create-post" className="cursor-pointer">
+                        <Link href="/user/create-post" className="cursor-pointer">
                           <NotebookPenIcon className="mr-2 h-4 w-4" />
                           <span>Create Post</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link href="/posts" className="cursor-pointer">
+                        <Link href="/user/posts" className="cursor-pointer">
                           <List className="mr-2 h-4 w-4" />
                           <span>My Posts</span>
                         </Link>

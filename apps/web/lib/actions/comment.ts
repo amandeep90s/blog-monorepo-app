@@ -23,6 +23,7 @@ export async function getPostComments({ postId, skip, take }: { postId: string; 
  * Save a new comment.
  */
 export async function saveComment(state: CommentFormState, formData: FormData): Promise<CommentFormState> {
+  // Validate form fields
   const validatedFields = CommentFormSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
@@ -34,20 +35,26 @@ export async function saveComment(state: CommentFormState, formData: FormData): 
     };
   }
 
-  const data = await authFetchGraphQL(print(CREATE_COMMENT_MUTATION), { input: { ...validatedFields.data } });
+  try {
+    const data = await authFetchGraphQL(print(CREATE_COMMENT_MUTATION), { input: { ...validatedFields.data } });
 
-  if (data.errors) {
+    if (data.errors) {
+      return {
+        data: Object.fromEntries(formData.entries()),
+        message: data.errors?.[0]?.message ?? "Failed to save comment. Please try again.",
+        ok: false,
+      };
+    }
+
+    return {
+      message: "Your comment has been added successfully!",
+      ok: true,
+    };
+  } catch {
     return {
       data: Object.fromEntries(formData.entries()),
-      message: data.errors?.[0]?.message ?? "Something went wrong",
+      message: "An unexpected error occurred. Please try again.",
       ok: false,
-      open: true,
     };
   }
-
-  return {
-    message: "Success! Your comment saved!",
-    ok: true,
-    open: false,
-  };
 }

@@ -3,7 +3,7 @@
 export type Post = {
   id: string;
   title: string;
-  slug: string;
+  slug: string | null;
   author: User;
   content: string;
   thumbnail: string | null;

@@ -19,6 +19,8 @@ export class AuthService {
 
     if (!user) throw new UnauthorizedException('User not found');
 
+    if (!user.password) throw new UnauthorizedException('Invalid credentials');
+
     const passwordMatched = await verify(user.password, password);
 
     if (!passwordMatched)
@@ -28,10 +30,10 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const { id, name, email, avatar } = user;
+    const { id, name, email, avatar, bio } = user;
     const { accessToken } = await this.generateToken(id);
 
-    return { id, name, email, avatar, accessToken };
+    return { id, name, email, avatar, bio, accessToken };
   }
 
   async generateToken(userId: string) {

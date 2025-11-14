@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
+import { PrismaClient } from '@prisma/client';
 import { hash } from 'argon2';
 import 'dotenv/config';
-import { PrismaClient } from 'generated/prisma/client';
 
 const prisma = new PrismaClient();
 

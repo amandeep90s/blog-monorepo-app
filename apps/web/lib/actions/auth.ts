@@ -58,10 +58,10 @@ export async function signIn(state: SignInFormState, formData: FormData): Promis
     };
   }
 
-  const { id, name, email, avatar, accessToken } = data.signIn;
+  const { id, name, email, avatar, bio, accessToken } = data.signIn;
 
   // Set session cookie
-  await createSession({ user: { id, name, email, avatar }, accessToken });
+  await createSession({ user: { id, name, email, avatar, bio }, accessToken });
 
   // Successfully signed in, revalidate the path to update any server components
   revalidatePath("/");

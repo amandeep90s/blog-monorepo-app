@@ -2,6 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { hash } from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserInput } from './dto/create-user.input';
+import { UpdateProfileInput } from './dto/update-profile.input';
 import { UpdateUserInput } from './dto/update-user.input';
 
 @Injectable()
@@ -78,8 +79,48 @@ export class UserService {
     });
   }
 
-  update(id: string, updateUserInput: UpdateUserInput) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserInput: UpdateUserInput) {
+    const { password, ...updateData } = updateUserInput;
+
+    const dataToUpdate = { ...updateData } as Record<string, any>;
+
+    // If password is provided, hash it before updating
+    if (password) {
+      const hashedPassword = await hash(password);
+      dataToUpdate['password'] = hashedPassword;
+    }
+
+    return this.prisma.user.update({
+      where: { id },
+      data: dataToUpdate,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        bio: true,
+        avatar: true,
+        createdAt: true,
+        updatedAt: true,
+        // Exclude password from the response
+      },
+    });
+  }
+
+  async updateProfile(id: string, updateProfileInput: UpdateProfileInput) {
+    return this.prisma.user.update({
+      where: { id },
+      data: updateProfileInput,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        bio: true,
+        avatar: true,
+        createdAt: true,
+        updatedAt: true,
+        // Exclude password from the response
+      },
+    });
   }
 
   remove(id: string) {

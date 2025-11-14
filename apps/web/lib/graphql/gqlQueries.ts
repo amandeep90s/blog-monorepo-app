@@ -50,7 +50,22 @@ export const SIGN_IN_MUTATION = gql`
       name
       email
       avatar
+      bio
       accessToken
+    }
+  }
+`;
+
+export const GET_CURRENT_USER = gql`
+  query getCurrentUser {
+    getCurrentUser {
+      id
+      name
+      email
+      avatar
+      bio
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -76,6 +91,109 @@ export const CREATE_COMMENT_MUTATION = gql`
   mutation createComment($input: CreateCommentInput!) {
     createComment(createCommentInput: $input) {
       id
+    }
+  }
+`;
+
+export const POST_LIKES_COUNT = gql`
+  query PostLikesCount($postId: String!) {
+    postLikesCount: getPostLikesCount(postId: $postId)
+  }
+`;
+
+export const USER_LIKED_POST = gql`
+  query UserLikedPost($postId: String!) {
+    userLikedPost: getUserLikedPost(postId: $postId)
+  }
+`;
+
+export const POST_LIKES = gql`
+  query PostLikeData($postId: String!) {
+    postLikesCount: getPostLikesCount(postId: $postId)
+    userLikedPost: getUserLikedPost(postId: $postId)
+  }
+`;
+
+export const LIKE_POST_MUTATION = gql`
+  mutation LikePost($postId: String!) {
+    likePost(postId: $postId)
+  }
+`;
+
+export const UNLIKE_POST_MUTATION = gql`
+  mutation UnlikePost($postId: String!) {
+    unlikePost(postId: $postId)
+  }
+`;
+
+export const GET_USER_POSTS = gql`
+  query GetUserPosts($skip: Int, $take: Int) {
+    getUserPosts(skip: $skip, take: $take) {
+      id
+      title
+      slug
+      thumbnail
+      content
+      published
+      createdAt
+      _count {
+        likes
+        comments
+      }
+    }
+    userPostCount
+  }
+`;
+
+export const CREATE_POST_MUTATION = gql`
+  mutation CreatePostMutation($input: CreatePostInput!) {
+    createPost(createPostInput: $input) {
+      id
+    }
+  }
+`;
+
+export const UPDATE_POST_MUTATION = gql`
+  mutation UpdatePost($input: UpdatePostInput!) {
+    updatePost(updatePostInput: $input) {
+      id
+    }
+  }
+`;
+
+export const DELETE_POST_MUTATION = gql`
+  mutation removePost($postId: String!) {
+    removePost(postId: $postId)
+  }
+`;
+
+export const GET_POST_BY_ID = gql`
+  query getPostById($id: String!) {
+    getPostById(id: $id) {
+      id
+      title
+      thumbnail
+      content
+      createdAt
+      published
+      author {
+        name
+      }
+      tags {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const UPDATE_PROFILE_MUTATION = gql`
+  mutation UpdateProfile($input: UpdateProfileInput!) {
+    updateProfile(updateProfileInput: $input) {
+      id
+      name
+      bio
+      updatedAt
     }
   }
 `;

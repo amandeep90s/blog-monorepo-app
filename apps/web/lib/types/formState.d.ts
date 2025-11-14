@@ -56,12 +56,27 @@ export type PostFormState =
         published?: string;
         previousThumbnailUrl?: string;
       };
-      error?: {
+      errors?: {
         title?: string[];
         content?: string[];
         thumbnail?: string[];
         tags?: string[];
         isPublished?: string[];
+      };
+      message?: string;
+      ok?: boolean;
+    }
+  | undefined;
+
+export type ProfileFormState =
+  | {
+      data?: {
+        name?: string;
+        bio?: string;
+      };
+      errors?: {
+        name?: string[];
+        bio?: string[];
       };
       message?: string;
       ok?: boolean;

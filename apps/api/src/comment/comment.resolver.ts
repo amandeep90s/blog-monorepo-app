@@ -1,6 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
+import { type GraphQLContext } from 'src/common/types/graphql-context.type';
 import { DEFAULT_PAGE_SIZE } from 'src/constants';
 import { CommentService } from './comment.service';
 import { CreateCommentInput } from './dto/create-comment.input';
@@ -38,7 +39,7 @@ export class CommentResolver {
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Comment)
   createComment(
-    @Context() context: { req: { user: { id: string } } },
+    @Context() context: GraphQLContext,
     @Args('createCommentInput') createCommentInput: CreateCommentInput,
   ) {
     const authorId = context.req.user.id;

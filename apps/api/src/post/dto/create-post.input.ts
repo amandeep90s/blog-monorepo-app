@@ -23,6 +23,10 @@ export class CreatePostInput {
   @IsString()
   thumbnail?: string;
 
+  @IsString({ each: true })
+  @Field(() => [String], { description: 'Tags associated with the post' })
+  tags: string[];
+
   @Field(() => Boolean, {
     nullable: true,
     description: 'Publication status',
@@ -31,9 +35,4 @@ export class CreatePostInput {
   @IsOptional()
   @IsBoolean()
   published?: boolean;
-
-  @Field(() => String, { description: 'ID of the author' })
-  @IsNotEmpty()
-  @IsString()
-  authorId: string;
 }

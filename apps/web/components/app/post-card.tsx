@@ -20,11 +20,12 @@ export default function PostCard({ post }: PostCardProps) {
       <div className="relative flex h-full flex-col justify-between">
         <div className="bg-muted relative h-48 w-full overflow-hidden rounded-md">
           <Image
-            src={post.thumbnail ?? "/no-image.png"}
+            src={post.thumbnail || "/no-image.png"}
             alt={post.title}
             sizes="(max-width: 768px) 100vw, 50vw"
             fill
             className="object-cover transition-transform duration-300 hover:scale-110"
+            loading="eager"
           />
         </div>
 
@@ -42,12 +43,18 @@ export default function PostCard({ post }: PostCardProps) {
         </div>
 
         <div className="flex gap-3 border-t border-dashed pt-6">
-          <Button asChild variant="secondary" size="sm" className="gap-1 pr-2 shadow-none">
-            <Link href={`/blog/${post.slug}`}>
-              Read More
-              <ChevronRight className="ml-0 size-3.5! opacity-50" />
-            </Link>
-          </Button>
+          {post.slug ? (
+            <Button asChild variant="secondary" size="sm" className="gap-1 pr-2 shadow-none">
+              <Link href={`/blog/${post.slug}`}>
+                Read More
+                <ChevronRight className="ml-0 size-3.5! opacity-50" />
+              </Link>
+            </Button>
+          ) : (
+            <Button variant="secondary" size="sm" className="gap-1 pr-2 shadow-none" disabled>
+              No Slug Available
+            </Button>
+          )}
         </div>
       </div>
     </Card>

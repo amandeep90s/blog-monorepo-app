@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { DEFAULT_PAGE_SIZE } from 'src/constants';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -12,7 +13,13 @@ import { UpdatePostInput } from './dto/update-post.input';
 export class PostService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createPostInput: CreatePostInput) {
+  async create({
+    userId,
+    createPostInput,
+  }: {
+    userId: string;
+    createPostInput: CreatePostInput;
+  }) {
     try {
       // Check if slug already exists
       const existingPost = await this.prisma.post.findUnique({
@@ -25,12 +32,18 @@ export class PostService {
 
       return await this.prisma.post.create({
         data: {
-          title: createPostInput.title,
-          slug: createPostInput.slug,
-          content: createPostInput.content,
-          thumbnail: createPostInput.thumbnail,
-          published: createPostInput.published ?? false,
-          authorId: createPostInput.authorId,
+          ...createPostInput,
+          author: {
+            connect: {
+              id: userId,
+            },
+          },
+          tags: {
+            connectOrCreate: createPostInput.tags.map((tag) => ({
+              where: { name: tag },
+              create: { name: tag },
+            })),
+          },
         },
         include: {
           author: {
@@ -64,7 +77,6 @@ export class PostService {
     return await this.prisma.post.findMany({
       skip,
       take,
-      where: { published: true },
       include: {
         author: {
           select: {
@@ -167,18 +179,29 @@ export class PostService {
     return post;
   }
 
-  async update(id: string, updatePostInput: UpdatePostInput) {
+  async update({
+    userId,
+    updatePostInput,
+  }: {
+    userId: string;
+    updatePostInput: UpdatePostInput;
+  }) {
     try {
-      const post = await this.prisma.post.findUnique({
-        where: { id },
+      const authorIdMatched = await this.prisma.post.findUnique({
+        where: { id: updatePostInput.id, authorId: userId },
       });
 
-      if (!post) {
-        throw new NotFoundException(`Post with ID "${id}" not found`);
+      if (!authorIdMatched) {
+        throw new UnauthorizedException(
+          'You are not authorized to update this post',
+        );
       }
 
       // If slug is being updated, check if it's already taken
-      if (updatePostInput.slug && updatePostInput.slug !== post.slug) {
+      if (
+        updatePostInput.slug &&
+        updatePostInput.slug !== authorIdMatched.slug
+      ) {
         const existingPost = await this.prisma.post.findUnique({
           where: { slug: updatePostInput.slug },
         });
@@ -188,12 +211,21 @@ export class PostService {
         }
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id: _id, ...updateData } = updatePostInput;
+      const { id, ...data } = updatePostInput;
 
       return await this.prisma.post.update({
         where: { id },
-        data: updateData,
+        data: {
+          ...data,
+          tags: {
+            set: [],
+            connectOrCreate:
+              updatePostInput.tags?.map((tag) => ({
+                where: { name: tag },
+                create: { name: tag },
+              })) || [],
+          },
+        },
         include: {
           author: {
             select: {
@@ -219,21 +251,23 @@ export class PostService {
     }
   }
 
-  async remove(id: string) {
+  async remove({ postId, userId }: { postId: string; userId: string }) {
     try {
-      const post = await this.prisma.post.findUnique({
-        where: { id },
+      const authorIdMatched = await this.prisma.post.findUnique({
+        where: { id: postId, authorId: userId },
       });
 
-      if (!post) {
-        throw new NotFoundException(`Post with ID "${id}" not found`);
+      if (!authorIdMatched) {
+        throw new UnauthorizedException(
+          'You are not authorized to delete this post',
+        );
       }
 
-      await this.prisma.post.delete({
-        where: { id },
+      const result = await this.prisma.post.delete({
+        where: { id: postId, authorId: userId },
       });
 
-      return post;
+      return !!result;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
@@ -245,8 +279,49 @@ export class PostService {
   }
 
   async count() {
+    return await this.prisma.post.count();
+  }
+
+  async findByUserId({
+    userId,
+    skip,
+    take,
+  }: {
+    userId: string;
+    skip: number;
+    take: number;
+  }) {
+    return await this.prisma.post.findMany({
+      where: {
+        author: {
+          id: userId,
+        },
+      },
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        published: true,
+        slug: true,
+        title: true,
+        thumbnail: true,
+        _count: {
+          select: {
+            comments: true,
+            likes: true,
+          },
+        },
+      },
+      take,
+      skip,
+    });
+  }
+
+  async userPostCount(userId: string) {
     return await this.prisma.post.count({
-      where: { published: true },
+      where: {
+        authorId: userId,
+      },
     });
   }
 }
