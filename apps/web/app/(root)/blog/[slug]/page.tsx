@@ -33,10 +33,10 @@ export default async function PostPage({ params }: PostPageProps) {
   return (
     <section className="py-16 md:py-32">
       <div className="mx-auto max-w-5xl space-y-8 px-6 md:space-y-12">
-        <div className="w-full overflow-hidden rounded-(--radius)">
+        <div className="w-full overflow-hidden rounded-lg">
           <Image
             className="h-100 w-full object-cover transition-all duration-500 hover:scale-105"
-            src={post.thumbnail ?? "/no-media.png"}
+            src={!!post.thumbnail ? post.thumbnail : "/no-media.png"}
             alt={post.title}
             height="300"
             width="300"

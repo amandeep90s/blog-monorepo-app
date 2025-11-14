@@ -20,11 +20,12 @@ export default function PostCard({ post }: PostCardProps) {
       <div className="relative flex h-full flex-col justify-between">
         <div className="bg-muted relative h-48 w-full overflow-hidden rounded-md">
           <Image
-            src={post.thumbnail ?? "/no-image.png"}
+            src={!!post.thumbnail ? post.thumbnail : "/no-image.png"}
             alt={post.title}
             sizes="(max-width: 768px) 100vw, 50vw"
             fill
             className="object-cover transition-transform duration-300 hover:scale-110"
+            loading="eager"
           />
         </div>
 
