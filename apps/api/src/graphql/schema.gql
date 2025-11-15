@@ -78,11 +78,6 @@ input CreatePostInput {
   title: String!
 }
 
-input CreateTagInput {
-  """Example field (placeholder)"""
-  exampleField: String!
-}
-
 input CreateUserInput {
   """The avatar of the user"""
   avatar: String
@@ -108,20 +103,13 @@ scalar DateTime
 type Mutation {
   createComment(createCommentInput: CreateCommentInput!): Comment!
   createPost(createPostInput: CreatePostInput!): Post!
-  createTag(createTagInput: CreateTagInput!): Tag!
   createUser(createUserInput: CreateUserInput!): User!
   likePost(postId: String!): Boolean!
-  removeComment(id: String!): Comment!
   removePost(postId: String!): Boolean!
-  removeTag(id: String!): Tag!
-  removeUser(id: String!): User!
   signIn(signInInput: SignInInput!): AuthPayload!
   unlikePost(postId: String!): Boolean!
-  updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   updatePost(updatePostInput: UpdatePostInput!): Post!
   updateProfile(updateProfileInput: UpdateProfileInput!): User!
-  updateTag(updateTagInput: UpdateTagInput!): Tag!
-  updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
 type Post {
@@ -162,7 +150,6 @@ type Post {
 }
 
 type Query {
-  comment(id: String!): Comment!
   getCurrentUser: User!
   getPostById(id: String!): Post!
   getPostBySlug(slug: String!): Post!
@@ -173,11 +160,7 @@ type Query {
   postCommentCount(postId: String!): String!
   posts(skip: Float, take: Float): [Post!]!
   postsCount: Int!
-  tag(id: String!): Tag!
-  user(id: String!): User!
-  userByEmail(email: String!): User!
   userPostCount: Int!
-  users: [User!]!
 }
 
 input SignInInput {
@@ -197,14 +180,6 @@ type Tag {
 
   """Posts associated with the tag"""
   posts: [Post!]!
-}
-
-input UpdateCommentInput {
-  content: String
-  id: String!
-
-  """ID of the post"""
-  postId: String
 }
 
 input UpdatePostInput {
@@ -234,30 +209,6 @@ input UpdateProfileInput {
 
   """The name of the user"""
   name: String
-}
-
-input UpdateTagInput {
-  """Example field (placeholder)"""
-  exampleField: String
-  id: String!
-}
-
-input UpdateUserInput {
-  """The avatar of the user"""
-  avatar: String
-
-  """The bio of the user"""
-  bio: String
-
-  """The email of the user"""
-  email: String
-  id: String!
-
-  """The  name of the user"""
-  name: String
-
-  """The password of the user"""
-  password: String
 }
 
 type User {

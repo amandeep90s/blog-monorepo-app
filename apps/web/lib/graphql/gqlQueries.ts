@@ -9,6 +9,10 @@ export const GET_POSTS = gql`
       content
       thumbnail
       createdAt
+      _count {
+        likes
+        comments
+      }
     }
     postsCount
   }

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar, ChevronRight } from "lucide-react";
+import { Calendar, ChevronRight, Heart, MessageCircle } from "lucide-react";
 
 import { Post } from "@/types/modelTypes";
 import { getRelativeTime, truncateText } from "@/lib/text-utils";
@@ -36,9 +36,25 @@ export default function PostCard({ post }: PostCardProps) {
           <p className="text-muted-foreground line-clamp-2 text-sm" title={post.content}>
             {truncateText(post.content, 100)}
           </p>
-          <div className="text-muted-foreground flex items-center gap-1.5 pt-2 text-xs">
-            <Calendar className="size-3.5" />
-            <time dateTime={createdAtISO}>{getRelativeTime(post.createdAt)}</time>
+
+          {/* Meta info */}
+          <div className="flex items-center justify-between pt-2">
+            <div className="text-muted-foreground flex items-center gap-1.5 text-xs">
+              <Calendar className="size-3.5" />
+              <time dateTime={createdAtISO}>{getRelativeTime(post.createdAt)}</time>
+            </div>
+
+            {/* Likes and Comments count */}
+            <div className="text-muted-foreground flex items-center gap-3 text-xs">
+              <div className="flex items-center gap-1">
+                <Heart className="size-3.5" />
+                <span>{post._count.likes}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <MessageCircle className="size-3.5" />
+                <span>{post._count.comments}</span>
+              </div>
+            </div>
           </div>
         </div>
 

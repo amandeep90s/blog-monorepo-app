@@ -87,6 +87,12 @@ export class PostService {
           },
         },
         tags: true,
+        _count: {
+          select: {
+            likes: true,
+            comments: true,
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',
@@ -107,6 +113,12 @@ export class PostService {
           },
         },
         tags: true,
+        _count: {
+          select: {
+            likes: true,
+            comments: true,
+          },
+        },
         comments: {
           include: {
             author: {
@@ -169,6 +181,12 @@ export class PostService {
           },
         },
         likes: true,
+        _count: {
+          select: {
+            likes: true,
+            comments: true,
+          },
+        },
       },
     });
 

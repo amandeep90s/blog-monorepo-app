@@ -157,6 +157,12 @@ describe('PostService', () => {
             },
           },
           tags: true,
+          _count: {
+            select: {
+              likes: true,
+              comments: true,
+            },
+          },
         },
         orderBy: {
           createdAt: 'desc',
