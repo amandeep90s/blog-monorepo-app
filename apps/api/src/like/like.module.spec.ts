@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LikeModule } from './like.module';
-import { LikeService } from './like.service';
-import { LikeResolver } from './like.resolver';
 import { PrismaService } from '../prisma/prisma.service';
+import { LikeModule } from './like.module';
+import { LikeResolver } from './like.resolver';
+import { LikeService } from './like.service';
 
 describe('LikeModule', () => {
   let module: TestingModule;

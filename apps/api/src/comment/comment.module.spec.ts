@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CommentModule } from './comment.module';
-import { CommentService } from './comment.service';
-import { CommentResolver } from './comment.resolver';
 import { PrismaService } from '../prisma/prisma.service';
+import { CommentModule } from './comment.module';
+import { CommentResolver } from './comment.resolver';
+import { CommentService } from './comment.service';
 
 describe('CommentModule', () => {
   let module: TestingModule;

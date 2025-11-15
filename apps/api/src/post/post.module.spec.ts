@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PostModule } from './post.module';
-import { PostService } from './post.service';
-import { PostResolver } from './post.resolver';
 import { PrismaService } from '../prisma/prisma.service';
+import { PostModule } from './post.module';
+import { PostResolver } from './post.resolver';
+import { PostService } from './post.service';
 
 describe('PostModule', () => {
   let module: TestingModule;
