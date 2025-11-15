@@ -62,20 +62,27 @@ describe('CommentService', () => {
     const createCommentInput: CreateCommentInput = {
       content: 'New comment',
       postId: 'post-1',
-      authorId: 'author-1',
     };
 
     it('should create a new comment successfully', async () => {
       mockPrismaService.comment.create.mockResolvedValue(mockComment);
 
-      const result = await service.create(createCommentInput);
+      const result = await service.create(createCommentInput, 'author-1');
 
       expect(result).toEqual(mockComment);
       expect(mockPrismaService.comment.create).toHaveBeenCalledWith({
         data: {
           content: createCommentInput.content,
-          postId: createCommentInput.postId,
-          authorId: createCommentInput.authorId,
+          post: {
+            connect: {
+              id: createCommentInput.postId,
+            },
+          },
+          author: {
+            connect: {
+              id: 'author-1',
+            },
+          },
         },
         include: {
           author: {

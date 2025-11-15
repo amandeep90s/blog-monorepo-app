@@ -71,13 +71,24 @@ describe('PostResolver', () => {
       authorId: 'author-1',
     };
 
+    const mockContext = {
+      req: {
+        user: {
+          id: 'user-1',
+        },
+      },
+    };
+
     it('should create a new post', async () => {
       mockPostService.create.mockResolvedValue(mockPost);
 
-      const result = await resolver.createPost(createPostInput);
+      const result = await resolver.createPost(mockContext, createPostInput);
 
       expect(result).toEqual(mockPost);
-      expect(postService.create).toHaveBeenCalledWith(createPostInput);
+      expect(postService.create).toHaveBeenCalledWith({
+        userId: 'user-1',
+        createPostInput,
+      });
     });
   });
 
@@ -148,28 +159,47 @@ describe('PostResolver', () => {
       title: 'Updated Title',
     };
 
+    const mockContext = {
+      req: {
+        user: {
+          id: 'user-1',
+        },
+      },
+    };
+
     it('should update a post', async () => {
       const updatedPost = { ...mockPost, ...updatePostInput };
       mockPostService.update.mockResolvedValue(updatedPost);
 
-      const result = await resolver.updatePost(updatePostInput);
+      const result = await resolver.updatePost(mockContext, updatePostInput);
 
       expect(result).toEqual(updatedPost);
-      expect(postService.update).toHaveBeenCalledWith(
-        updatePostInput.id,
+      expect(postService.update).toHaveBeenCalledWith({
+        userId: 'user-1',
         updatePostInput,
-      );
+      });
     });
   });
 
   describe('removePost', () => {
+    const mockContext = {
+      req: {
+        user: {
+          id: 'user-1',
+        },
+      },
+    };
+
     it('should delete a post', async () => {
-      mockPostService.remove.mockResolvedValue(mockPost);
+      mockPostService.remove.mockResolvedValue(true);
 
-      const result = await resolver.removePost('1');
+      const result = await resolver.removePost(mockContext, '1');
 
-      expect(result).toEqual(mockPost);
-      expect(postService.remove).toHaveBeenCalledWith('1');
+      expect(result).toBe(true);
+      expect(postService.remove).toHaveBeenCalledWith({
+        postId: '1',
+        userId: 'user-1',
+      });
     });
   });
 });
