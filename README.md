@@ -1,51 +1,161 @@
-# Turborepo starter
+# Blog Monorepo Application
 
-This Turborepo starter is maintained by the Turborepo core team.
+A full-stack blog application built with NestJS, Next.js, GraphQL, Prisma, and PostgreSQL in a Turborepo monorepo setup.
 
-## Using this example
+## 📋 Table of Contents
 
-Run the following command:
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Testing](#testing)
+- [Project Structure](#project-structure)
 
-```sh
-npx create-turbo@latest
+## 🎯 Overview
+
+This is a modern, full-stack blog application featuring:
+
+- **Backend**: NestJS with GraphQL API, Prisma ORM, and PostgreSQL
+- **Frontend**: Next.js 14+ with App Router, React 19, TanStack Query
+- **Monorepo**: Turborepo for efficient build orchestration
+- **Testing**: Comprehensive unit and integration tests
+
+## 🛠 Tech Stack
+
+### Backend (apps/api)
+
+- **NestJS**: Progressive Node.js framework
+- **GraphQL**: API query language with Apollo Server
+- **Prisma**: Next-generation ORM
+- **PostgreSQL**: Relational database
+- **JWT**: Authentication
+- **Jest**: Testing framework
+
+### Frontend (apps/web)
+
+- **Next.js 14+**: React framework with App Router
+- **React 19**: UI library
+- **TanStack Query**: Data fetching and caching
+- **Tailwind CSS**: Utility-first CSS
+- **shadcn/ui**: Re-usable components
+- **Jest + RTL**: Testing framework
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- pnpm 9+
+- PostgreSQL
+
+### Installation
+
+1. Clone the repository
+
+```bash
+git clone <repository-url>
+cd blog-monorepo-app
 ```
 
-## What's inside?
+2. Install dependencies
 
-This Turborepo includes the following packages/apps:
+```bash
+pnpm install
+```
 
-### Apps and Packages
+3. Set up environment variables
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+**For API (apps/api/.env):**
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/blog_db"
+JWT_SECRET="your-secret-key"
+```
 
-### Utilities
+**For Web (apps/web/.env.local):**
 
-This Turborepo has some additional tools already setup for you:
+```env
+NEXT_PUBLIC_API_URL="http://localhost:3001/graphql"
+```
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+4. Run database migrations
 
-### Build
+```bash
+cd apps/api
+pnpm prisma migrate dev
+pnpm db:seed  # Optional: Seed the database
+```
 
-To build all apps and packages, run the following command:
+5. Start development servers
+
+```bash
+# From root directory
+pnpm dev
+
+# Or individually
+cd apps/api && pnpm dev      # API runs on http://localhost:3001
+cd apps/web && pnpm dev      # Web runs on http://localhost:3000
+```
+
+## 🧪 Testing
+
+This project includes comprehensive testing for both applications.
+
+### Quick Start
+
+```bash
+# Run all tests (from root)
+pnpm test
+
+# Run API tests
+cd apps/api
+pnpm test              # Unit tests
+pnpm test:watch        # Watch mode
+pnpm test:cov          # With coverage
+pnpm test:e2e          # E2E tests
+
+# Run Web tests
+cd apps/web
+pnpm test              # All tests
+pnpm test:watch        # Watch mode
+pnpm test:coverage     # With coverage
+```
+
+### Test Coverage
+
+- **Backend**: Unit tests for services, resolvers, and E2E tests for GraphQL operations
+- **Frontend**: Component tests, utility tests, and integration tests for server actions
+
+For detailed testing documentation, see [TESTING.md](./TESTING.md)
+
+## 📁 Project Structure
 
 ```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+blog-monorepo-app/
+├── apps/
+│   ├── api/                 # NestJS GraphQL API
+│   │   ├── prisma/         # Database schema and migrations
+│   │   ├── src/            # Source code
+│   │   │   ├── auth/       # Authentication module
+│   │   │   ├── post/       # Post module
+│   │   │   ├── user/       # User module
+│   │   │   ├── comment/    # Comment module
+│   │   │   └── like/       # Like module
+│   │   └── test/           # E2E tests
+│   │
+│   └── web/                # Next.js frontend
+│       ├── app/            # App router pages
+│       ├── components/     # React components
+│       │   ├── ui/         # UI components
+│       │   └── app/        # App-specific components
+│       ├── lib/            # Utilities and helpers
+│       └── types/          # TypeScript types
+│
+├── packages/
+│   ├── eslint-config/      # Shared ESLint configs
+│   └── typescript-config/  # Shared TypeScript configs
+│
+├── TESTING.md              # Testing documentation
+└── turbo.json              # Turborepo configuration
 ```
 
 You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
