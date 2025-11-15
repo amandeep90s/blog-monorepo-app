@@ -83,9 +83,9 @@ describe("Post Actions", () => {
         getPostBySlug: null,
       });
 
-      const result = await fetchPostBySlug("non-existent");
-
-      expect(result).toBeNull();
+      await expect(fetchPostBySlug("non-existent")).rejects.toThrow(
+        'Failed to fetch post: Post with slug "non-existent" not found'
+      );
     });
   });
 });

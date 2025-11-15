@@ -99,4 +99,38 @@ describe("PostCard Component", () => {
     const contentElement = screen.getByTitle(longContent);
     expect(contentElement.textContent?.length).toBeLessThanOrEqual(103); // 100 + "..."
   });
+
+  it("should display likes and comments count", () => {
+    const postWithEngagement = {
+      ...mockPost,
+      _count: {
+        likes: 42,
+        comments: 8,
+      },
+    };
+
+    render(<PostCard post={postWithEngagement} />);
+
+    // Check if likes count is displayed
+    expect(screen.getByText("42")).toBeInTheDocument();
+
+    // Check if comments count is displayed
+    expect(screen.getByText("8")).toBeInTheDocument();
+  });
+
+  it("should display zero likes and comments when no engagement", () => {
+    render(<PostCard post={mockPost} />);
+
+    // Both should show 0
+    const zeroElements = screen.getAllByText("0");
+    expect(zeroElements.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("should render disabled button when post has no slug", () => {
+    const postWithoutSlug = { ...mockPost, slug: null };
+    render(<PostCard post={postWithoutSlug} />);
+
+    const disabledButton = screen.getByRole("button", { name: /No Slug Available/i });
+    expect(disabledButton).toBeDisabled();
+  });
 });
