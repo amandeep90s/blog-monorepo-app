@@ -68,14 +68,17 @@ describe('PostService', () => {
       content: 'Post content',
       thumbnail: 'thumbnail.jpg',
       published: true,
-      authorId: 'author-1',
+      tags: ['tag1', 'tag2'],
     };
 
     it('should create a new post successfully', async () => {
       mockPrismaService.post.findUnique.mockResolvedValue(null);
       mockPrismaService.post.create.mockResolvedValue(mockPost);
 
-      const result = await service.create(createPostInput);
+      const result = await service.create({
+        userId: 'author-1',
+        createPostInput,
+      });
 
       expect(result).toEqual(mockPost);
       expect(mockPrismaService.post.findUnique).toHaveBeenCalledWith({
@@ -88,7 +91,17 @@ describe('PostService', () => {
           content: createPostInput.content,
           thumbnail: createPostInput.thumbnail,
           published: createPostInput.published,
-          authorId: createPostInput.authorId,
+          author: {
+            connect: {
+              id: 'author-1',
+            },
+          },
+          tags: {
+            connectOrCreate: createPostInput.tags.map((tag) => ({
+              where: { name: tag },
+              create: { name: tag },
+            })),
+          },
         },
         include: {
           author: {
@@ -107,12 +120,18 @@ describe('PostService', () => {
     it('should throw ConflictException if slug already exists', async () => {
       mockPrismaService.post.findUnique.mockResolvedValue(mockPost);
 
-      await expect(service.create(createPostInput)).rejects.toThrow(
-        ConflictException,
-      );
-      await expect(service.create(createPostInput)).rejects.toThrow(
-        'A post with this slug already exists',
-      );
+      await expect(
+        service.create({
+          userId: 'author-1',
+          createPostInput,
+        }),
+      ).rejects.toThrow(ConflictException);
+      await expect(
+        service.create({
+          userId: 'author-1',
+          createPostInput,
+        }),
+      ).rejects.toThrow('A post with this slug already exists');
       expect(mockPrismaService.post.create).not.toHaveBeenCalled();
     });
   });
@@ -128,7 +147,6 @@ describe('PostService', () => {
       expect(mockPrismaService.post.findMany).toHaveBeenCalledWith({
         skip: 0,
         take: DEFAULT_PAGE_SIZE,
-        where: { published: true },
         include: {
           author: {
             select: {
@@ -164,7 +182,7 @@ describe('PostService', () => {
 
   describe('findBySlug', () => {
     it('should return post by slug', async () => {
-      const postWithComments = { ...mockPost, comments: [] };
+      const postWithComments = { ...mockPost, comments: [], likes: [] };
       mockPrismaService.post.findUnique.mockResolvedValue(postWithComments);
 
       const result = await service.findBySlug('test-post');
@@ -177,12 +195,12 @@ describe('PostService', () => {
       );
     });
 
-    it('should return null if post not found', async () => {
+    it('should throw NotFoundException if post not found', async () => {
       mockPrismaService.post.findUnique.mockResolvedValue(null);
 
-      const result = await service.findBySlug('non-existent');
-
-      expect(result).toBeNull();
+      await expect(service.findBySlug('non-existent')).rejects.toThrow(
+        'Post with slug "non-existent" not found',
+      );
     });
   });
 
@@ -191,6 +209,7 @@ describe('PostService', () => {
       id: '1',
       title: 'Updated Title',
       published: false,
+      tags: ['tag1'],
     };
 
     it('should update a post successfully', async () => {
@@ -198,9 +217,15 @@ describe('PostService', () => {
       mockPrismaService.post.findUnique.mockResolvedValue(mockPost);
       mockPrismaService.post.update.mockResolvedValue(updatedPost);
 
-      const result = await service.update(updatePostInput.id, updatePostInput);
+      const result = await service.update({
+        userId: 'author-1',
+        updatePostInput,
+      });
 
       expect(result).toEqual(updatedPost);
+      expect(mockPrismaService.post.findUnique).toHaveBeenCalledWith({
+        where: { id: updatePostInput.id, authorId: 'author-1' },
+      });
       expect(mockPrismaService.post.update).toHaveBeenCalled();
     });
   });
@@ -210,11 +235,17 @@ describe('PostService', () => {
       mockPrismaService.post.findUnique.mockResolvedValue(mockPost);
       mockPrismaService.post.delete.mockResolvedValue(mockPost);
 
-      const result = await service.remove('1');
+      const result = await service.remove({
+        postId: '1',
+        userId: 'author-1',
+      });
 
-      expect(result).toEqual(mockPost);
+      expect(result).toEqual(true);
+      expect(mockPrismaService.post.findUnique).toHaveBeenCalledWith({
+        where: { id: '1', authorId: 'author-1' },
+      });
       expect(mockPrismaService.post.delete).toHaveBeenCalledWith({
-        where: { id: '1' },
+        where: { id: '1', authorId: 'author-1' },
       });
     });
   });

@@ -5,6 +5,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { UserService } from './user.service';
 
+jest.mock('argon2');
+
 describe('UserService', () => {
   let service: UserService;
 
@@ -51,6 +53,7 @@ describe('UserService', () => {
     }).compile();
 
     service = module.get<UserService>(UserService);
+    jest.clearAllMocks();
   });
 
   afterEach(() => {
@@ -72,7 +75,7 @@ describe('UserService', () => {
     it('should create a new user successfully', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(null);
       mockPrismaService.user.create.mockResolvedValue(mockUser);
-      jest.spyOn(argon2, 'hash').mockResolvedValue('hashedPassword' as never);
+      (argon2.hash as jest.Mock).mockResolvedValue('hashedPassword');
 
       const result = await service.create(createUserInput);
 

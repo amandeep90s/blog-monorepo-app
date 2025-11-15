@@ -7,6 +7,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { AuthService } from './auth.service';
 import { SignInInput } from './dto/signin.input';
 
+jest.mock('argon2');
+
 describe('AuthService', () => {
   let service: AuthService;
 
@@ -48,6 +50,7 @@ describe('AuthService', () => {
     }).compile();
 
     service = module.get<AuthService>(AuthService);
+    jest.clearAllMocks();
   });
 
   afterEach(() => {
@@ -66,7 +69,7 @@ describe('AuthService', () => {
 
     it('should validate user with correct credentials', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
-      jest.spyOn(argon2, 'verify').mockResolvedValue(true);
+      (argon2.verify as jest.Mock).mockResolvedValue(true);
 
       const result = await service.validateLocalUser(signInInput);
 
@@ -89,7 +92,7 @@ describe('AuthService', () => {
 
     it('should throw UnauthorizedException if password is invalid', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
-      jest.spyOn(argon2, 'verify').mockResolvedValue(false);
+      (argon2.verify as jest.Mock).mockResolvedValue(false);
 
       await expect(service.validateLocalUser(signInInput)).rejects.toThrow(
         UnauthorizedException,
@@ -112,6 +115,7 @@ describe('AuthService', () => {
         name: mockUser.name,
         email: mockUser.email,
         avatar: mockUser.avatar,
+        bio: mockUser.bio,
         accessToken,
       });
       expect(mockJwtService.signAsync).toHaveBeenCalledWith({

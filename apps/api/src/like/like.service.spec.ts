@@ -1,4 +1,4 @@
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateLikeInput } from './dto/create-like.input';
@@ -30,8 +30,10 @@ describe('LikeService', () => {
       create: jest.fn(),
       findMany: jest.fn(),
       findUnique: jest.fn(),
+      findFirst: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
+      count: jest.fn(),
     },
   };
 
@@ -57,19 +59,19 @@ describe('LikeService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('create', () => {
+  describe('likePost', () => {
     const createLikeInput: CreateLikeInput = {
       userId: 'user-1',
       postId: 'post-1',
     };
 
-    it('should create a new like successfully', async () => {
+    it('should like a post successfully', async () => {
       mockPrismaService.like.findUnique.mockResolvedValue(null);
       mockPrismaService.like.create.mockResolvedValue(mockLike);
 
-      const result = await service.create(createLikeInput);
+      const result = await service.likePost(createLikeInput);
 
-      expect(result).toEqual(mockLike);
+      expect(result).toEqual(true);
       expect(mockPrismaService.like.findUnique).toHaveBeenCalledWith({
         where: {
           userId_postId: {
@@ -83,76 +85,109 @@ describe('LikeService', () => {
           userId: createLikeInput.userId,
           postId: createLikeInput.postId,
         },
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              avatar: true,
-            },
-          },
-          post: {
-            select: {
-              id: true,
-              title: true,
-              slug: true,
-            },
-          },
-        },
       });
     });
 
     it('should throw ConflictException if like already exists', async () => {
       mockPrismaService.like.findUnique.mockResolvedValue(mockLike);
 
-      await expect(service.create(createLikeInput)).rejects.toThrow(
+      await expect(service.likePost(createLikeInput)).rejects.toThrow(
         ConflictException,
       );
-      await expect(service.create(createLikeInput)).rejects.toThrow(
+      await expect(service.likePost(createLikeInput)).rejects.toThrow(
         'You have already liked this post',
       );
       expect(mockPrismaService.like.create).not.toHaveBeenCalled();
     });
   });
 
-  describe('findAll', () => {
-    it('should return all likes', async () => {
-      const likes = [mockLike];
-      mockPrismaService.like.findMany.mockResolvedValue(likes);
+  describe('unlikePost', () => {
+    const createLikeInput: CreateLikeInput = {
+      userId: 'user-1',
+      postId: 'post-1',
+    };
 
-      const result = await service.findAll();
-
-      expect(result).toEqual(likes);
-      expect(mockPrismaService.like.findMany).toHaveBeenCalled();
-    });
-  });
-
-  describe('findOne', () => {
-    it('should return a like by id', async () => {
-      mockPrismaService.like.findUnique.mockResolvedValue(mockLike);
-
-      const result = await service.findOne('1');
-
-      expect(result).toEqual(mockLike);
-      expect(mockPrismaService.like.findUnique).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: { id: '1' },
-        }),
-      );
-    });
-  });
-
-  describe('remove', () => {
-    it('should delete a like successfully', async () => {
+    it('should unlike a post successfully', async () => {
       mockPrismaService.like.findUnique.mockResolvedValue(mockLike);
       mockPrismaService.like.delete.mockResolvedValue(mockLike);
 
-      const result = await service.remove('1');
+      const result = await service.unlikePost(createLikeInput);
 
-      expect(result).toEqual(mockLike);
+      expect(result).toEqual(true);
+      expect(mockPrismaService.like.findUnique).toHaveBeenCalledWith({
+        where: {
+          userId_postId: {
+            userId: createLikeInput.userId,
+            postId: createLikeInput.postId,
+          },
+        },
+      });
       expect(mockPrismaService.like.delete).toHaveBeenCalledWith({
-        where: { id: '1' },
+        where: {
+          userId_postId: {
+            userId: createLikeInput.userId,
+            postId: createLikeInput.postId,
+          },
+        },
+      });
+    });
+
+    it('should throw NotFoundException if like does not exist', async () => {
+      mockPrismaService.like.findUnique.mockResolvedValue(null);
+
+      await expect(service.unlikePost(createLikeInput)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(mockPrismaService.like.delete).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getPostLikesCount', () => {
+    it('should return the count of likes for a post', async () => {
+      mockPrismaService.like.count.mockResolvedValue(5);
+
+      const result = await service.getPostLikesCount('post-1');
+
+      expect(result).toEqual(5);
+      expect(mockPrismaService.like.count).toHaveBeenCalledWith({
+        where: {
+          postId: 'post-1',
+        },
+      });
+    });
+  });
+
+  describe('getUserLikedPost', () => {
+    const createLikeInput: CreateLikeInput = {
+      userId: 'user-1',
+      postId: 'post-1',
+    };
+
+    it('should return true if user has liked the post', async () => {
+      mockPrismaService.like.findFirst.mockResolvedValue(mockLike);
+
+      const result = await service.getUserLikedPost(createLikeInput);
+
+      expect(result).toEqual(true);
+      expect(mockPrismaService.like.findFirst).toHaveBeenCalledWith({
+        where: {
+          postId: createLikeInput.postId,
+          userId: createLikeInput.userId,
+        },
+      });
+    });
+
+    it('should return false if user has not liked the post', async () => {
+      mockPrismaService.like.findFirst.mockResolvedValue(null);
+
+      const result = await service.getUserLikedPost(createLikeInput);
+
+      expect(result).toEqual(false);
+      expect(mockPrismaService.like.findFirst).toHaveBeenCalledWith({
+        where: {
+          postId: createLikeInput.postId,
+          userId: createLikeInput.userId,
+        },
       });
     });
   });
