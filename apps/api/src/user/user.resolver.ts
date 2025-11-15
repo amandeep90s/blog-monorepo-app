@@ -4,7 +4,6 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { type GraphQLContext } from 'src/common/types/graphql-context.type';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateProfileInput } from './dto/update-profile.input';
-import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 
@@ -17,31 +16,11 @@ export class UserResolver {
     return await this.userService.create(createUserInput);
   }
 
-  @Query(() => [User], { name: 'users' })
-  findAll() {
-    return this.userService.findAll();
-  }
-
-  @Query(() => User, { name: 'user' })
-  findOne(@Args('id') id: string) {
-    return this.userService.findOne(id);
-  }
-
-  @Query(() => User, { name: 'userByEmail' })
-  findByEmail(@Args('email') email: string) {
-    return this.userService.findByEmail(email);
-  }
-
   @Query(() => User, { name: 'getCurrentUser' })
   @UseGuards(JwtAuthGuard)
   getCurrentUser(@Context() context: GraphQLContext) {
     const userId = context.req.user.id;
     return this.userService.findOne(userId);
-  }
-
-  @Mutation(() => User)
-  updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-    return this.userService.update(updateUserInput.id, updateUserInput);
   }
 
   @Mutation(() => User)
@@ -52,10 +31,5 @@ export class UserResolver {
   ) {
     const userId = context.req.user.id;
     return this.userService.updateProfile(userId, updateProfileInput);
-  }
-
-  @Mutation(() => User)
-  removeUser(@Args('id') id: string) {
-    return this.userService.remove(id);
   }
 }

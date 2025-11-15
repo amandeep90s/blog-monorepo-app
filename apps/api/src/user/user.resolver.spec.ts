@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateProfileInput } from './dto/update-profile.input';
-import { UpdateUserInput } from './dto/update-user.input';
 import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
 
@@ -21,12 +20,8 @@ describe('UserResolver', () => {
 
   const mockUserService = {
     create: jest.fn(),
-    findAll: jest.fn(),
     findOne: jest.fn(),
-    findByEmail: jest.fn(),
-    update: jest.fn(),
     updateProfile: jest.fn(),
-    remove: jest.fn(),
   };
 
   const mockContext = {
@@ -74,42 +69,6 @@ describe('UserResolver', () => {
     });
   });
 
-  describe('findAll', () => {
-    it('should return all users', () => {
-      const users = [mockUser];
-      mockUserService.findAll.mockReturnValue(users);
-
-      const result = resolver.findAll();
-
-      expect(result).toEqual(users);
-      expect(userService.findAll).toHaveBeenCalled();
-    });
-  });
-
-  describe('findOne', () => {
-    it('should return a user by id', () => {
-      const id = '1';
-      mockUserService.findOne.mockReturnValue(mockUser);
-
-      const result = resolver.findOne(id);
-
-      expect(result).toEqual(mockUser);
-      expect(userService.findOne).toHaveBeenCalledWith(id);
-    });
-  });
-
-  describe('findByEmail', () => {
-    it('should return a user by email', () => {
-      const email = 'test@example.com';
-      mockUserService.findByEmail.mockReturnValue(mockUser);
-
-      const result = resolver.findByEmail(email);
-
-      expect(result).toEqual(mockUser);
-      expect(userService.findByEmail).toHaveBeenCalledWith(email);
-    });
-  });
-
   describe('getCurrentUser', () => {
     it('should return current user', () => {
       const userId = 'user-1';
@@ -119,24 +78,6 @@ describe('UserResolver', () => {
 
       expect(result).toEqual(mockUser);
       expect(userService.findOne).toHaveBeenCalledWith(userId);
-    });
-  });
-
-  describe('updateUser', () => {
-    it('should update a user', () => {
-      const updateUserInput: UpdateUserInput = {
-        id: '1',
-        name: 'Updated User',
-      };
-      mockUserService.update.mockReturnValue(mockUser);
-
-      const result = resolver.updateUser(updateUserInput);
-
-      expect(result).toEqual(mockUser);
-      expect(userService.update).toHaveBeenCalledWith(
-        updateUserInput.id,
-        updateUserInput,
-      );
     });
   });
 
@@ -156,17 +97,6 @@ describe('UserResolver', () => {
         userId,
         updateProfileInput,
       );
-    });
-  });
-
-  describe('removeUser', () => {
-    it('should remove a user', () => {
-      const id = '1';
-      const result = 'User removed';
-      mockUserService.remove.mockReturnValue(result);
-
-      expect(resolver.removeUser(id)).toEqual(result);
-      expect(userService.remove).toHaveBeenCalledWith(id);
     });
   });
 });

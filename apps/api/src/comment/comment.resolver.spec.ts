@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CommentResolver } from './comment.resolver';
 import { CommentService } from './comment.service';
 import { CreateCommentInput } from './dto/create-comment.input';
-import { UpdateCommentInput } from './dto/update-comment.input';
 
 describe('CommentResolver', () => {
   let resolver: CommentResolver;
@@ -25,11 +24,7 @@ describe('CommentResolver', () => {
 
   const mockCommentService = {
     create: jest.fn(),
-    findAll: jest.fn(),
-    findOne: jest.fn(),
     findOneByPost: jest.fn(),
-    update: jest.fn(),
-    remove: jest.fn(),
     count: jest.fn(),
   };
 
@@ -112,60 +107,6 @@ describe('CommentResolver', () => {
         createCommentInput,
         authorId,
       );
-    });
-  });
-
-  describe('findAll', () => {
-    it('should return all comments', () => {
-      const comments = [mockComment];
-      mockCommentService.findAll.mockReturnValue(comments);
-
-      const result = resolver.findAll();
-
-      expect(result).toEqual(comments);
-      expect(commentService.findAll).toHaveBeenCalled();
-    });
-  });
-
-  describe('findOne', () => {
-    it('should return a comment by id', () => {
-      const id = '1';
-      mockCommentService.findOne.mockReturnValue(mockComment);
-
-      const result = resolver.findOne(id);
-
-      expect(result).toEqual(mockComment);
-      expect(commentService.findOne).toHaveBeenCalledWith(id);
-    });
-  });
-
-  describe('updateComment', () => {
-    it('should update a comment', () => {
-      const updateCommentInput: UpdateCommentInput = {
-        id: '1',
-        content: 'Updated comment',
-      };
-
-      mockCommentService.update.mockReturnValue(mockComment);
-
-      const result = resolver.updateComment(updateCommentInput);
-
-      expect(result).toEqual(mockComment);
-      expect(commentService.update).toHaveBeenCalledWith(
-        updateCommentInput.id,
-        updateCommentInput,
-      );
-    });
-  });
-
-  describe('removeComment', () => {
-    it('should remove a comment', () => {
-      const id = '1';
-      const result = 'Comment removed';
-      mockCommentService.remove.mockReturnValue(result);
-
-      expect(resolver.removeComment(id)).toBe(result);
-      expect(commentService.remove).toHaveBeenCalledWith(id);
     });
   });
 });
